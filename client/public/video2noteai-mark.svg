@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="title">
+  <title>Video2NoteAI</title>
+  <path
+    fill="#45B653"
+    d="M7.5 3h10.2L25 10.3v16.2A2.5 2.5 0 0 1 22.5 29h-15A2.5 2.5 0 0 1 5 26.5v-21A2.5 2.5 0 0 1 7.5 3Z"
+  />
+  <path fill="#278B45" d="M17.7 3v5.1a2.2 2.2 0 0 0 2.2 2.2H25L17.7 3Z" />
+  <path fill="#fff" d="m9.4 10.2 6.7 4.1a1.2 1.2 0 0 1 0 2l-6.7 4.1V10.2Z" />
+  <path stroke="#fff" stroke-linecap="round" stroke-width="2" d="M18.6 16h2.6M18.6 20h2.6" />
+  <path
+    fill="#278B45"
+    d="M27.3 1.5c.2 1.7.8 2.3 2.5 2.5-1.7.2-2.3.8-2.5 2.5-.2-1.7-.8-2.3-2.5-2.5 1.7-.2 2.3-.8 2.5-2.5Z"
+  />
+</svg>

@@ -1,0 +1,1431 @@
+{
+  "datasetVersion": "v1-candidate",
+  "createdAt": "2026-09-23",
+  "provenance": {
+    "generatorModel": "OpenAI Codex (GPT-5)",
+    "generatorPromptVersion": "dataset-build-guide-gen-v1",
+    "judgeModel": "qwen-plus",
+    "judgePromptVersion": "dataset-build-guide-judge-v1",
+    "productionAnswerModel": "deepseek-v4-flash",
+    "retrievalParamsSnapshot": {
+      "maxEvidence": 8,
+      "maxEvidencePerMedia": 3,
+      "historyMaxTurns": 10,
+      "qdrantFilterBatchSize": 128
+    },
+    "datasetSha256": "fed45ef298630d9a086059c7c0a0494fdbe2a30164fc89f4c1cac618e038d67f"
+  },
+  "verificationStatus": {
+    "structural": "pass_9_cases_36_turns_distribution_9_9_6_6_6",
+    "evidenceGrounding": "pass_43_ranges_exactly_match_cc_segments",
+    "retrieval": "answerable_top5_pass_30_of_30;unanswerable_manual_absence_pass_6_of_6",
+    "judge": "pass_36_of_36_qwen-plus_incremental",
+    "deduplication": "pass_36_kept_0_dropped_threshold_0.92",
+    "humanReview": "pending_owner_review"
+  },
+  "targetDistribution": {
+    "note": "3 个视频 × 3 条四轮会话链 = 9 条会话、36 题。下表是最终要凑齐的题型分布，不代表每条链的固定顺序，一条链内可以混排。",
+    "首轮直接问题": 9,
+    "指代追问": 9,
+    "省略追问": 6,
+    "对比或约束追问": 6,
+    "无答案或越界问题": 6
+  },
+  "cases": [
+    {
+      "conversationCaseId": "video-62-chain-01",
+      "mediaRef": "sha256:7780b0edcdf062403bc0903a705ab444",
+      "sourceVideoTag": "video-A-wuxia",
+      "sourceDistributionNote": "CC 字幕主导，6 章节，武侠文化类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "视频说平江不肖生开辟的第一条武侠创作路线，有什么风格和内容特征？",
+          "standaloneQuestion": "视频说平江不肖生开辟的第一条武侠创作路线，有什么风格和内容特征？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "首先一条是《江湖奇侠传》的玄幻",
+            "像飞剑来去取法宝，对轰气如流",
+            "编成了昆仑、崆峒两大门派的正邪斗法"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 240000,
+              "endMs": 300000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": null,
+            "anchorEvidence": "240000-300000ms：平江不肖生以《江湖奇侠传》开辟玄幻路线，描写飞剑、法宝和门派斗法。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "另一条呢？",
+          "standaloneQuestion": "平江不肖生开辟的另一条武侠创作路线有什么风格和内容特征？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "另一条线则是《近代侠义英雄传》的家国写实",
+            "一招一合拳，拳到肉",
+            "武功的背后是家国大义"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 240000,
+              "endMs": 300000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 1,
+            "anchorEvidence": "240000-300000ms：另一条路线是《近代侠义英雄传》的家国写实，强调拳拳到肉与家国大义。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "有哪些代表人物？",
+          "standaloneQuestion": "平江不肖生以家国写实为特点的武侠创作路线有哪些代表人物？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "大侠霍元甲",
+            "大刀王五"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 240000,
+              "endMs": 300000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 2,
+            "anchorEvidence": "240000-300000ms：家国写实路线举出了霍元甲和大刀王五。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 4,
+          "category": "对比或约束追问",
+          "question": "这两条路线在表现手法和主题上有什么不同？",
+          "standaloneQuestion": "平江不肖生开辟的《江湖奇侠传》玄幻路线与《近代侠义英雄传》家国写实路线，在表现手法和主题上有什么不同？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "《江湖奇侠传》的玄幻，像飞剑来去取法宝，对轰气如流",
+            "《近代侠义英雄传》的家国写实",
+            "一招一合拳，拳到肉，武功的背后是家国大义"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 240000,
+              "endMs": 300000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 300000,
+              "endMs": 360000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 3,
+            "anchorEvidence": "240000-360000ms：两段分别给出玄幻斗法与家国写实、拳拳到肉的路线特征。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-62-chain-02",
+      "mediaRef": "sha256:7780b0edcdf062403bc0903a705ab444",
+      "sourceVideoTag": "video-A-wuxia",
+      "sourceDistributionNote": "CC 字幕主导，6 章节，武侠文化类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "被安排在报纸上开始连载武侠小说的陈文统，用了什么笔名，首部连载叫什么？",
+          "standaloneQuestion": "被安排在报纸上开始连载武侠小说的陈文统，用了什么笔名，首部连载叫什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "小说的名字叫《龙虎斗京华》",
+            "陈文统给自己起了一个笔名叫做梁羽生",
+            "新派武侠的世界由此开启"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 420000,
+              "endMs": 480000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": null,
+            "anchorEvidence": "420000-480000ms：陈文统以梁羽生为笔名，在报纸上连载《龙虎斗京华》。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "后来编辑部又找的那个年轻人呢？",
+          "standaloneQuestion": "梁羽生连载分身乏术后，编辑部后来找的另一个年轻人是谁，他使用了什么笔名？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "这个小伙子名叫查良庸",
+            "时年31岁",
+            "他给自己起的笔名叫做金庸"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 480000,
+              "endMs": 540000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 1,
+            "anchorEvidence": "480000-540000ms：另一个年轻人是31岁的查良庸，笔名金庸。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "一共留下了多少部？",
+          "standaloneQuestion": "视频中说金庸一共留下了多少部武侠作品？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "飞雪连天射白鹿，笑书神侠倚碧鸳",
+            "加上一部短篇《越女剑》",
+            "15部作品"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 480000,
+              "endMs": 540000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 2,
+            "anchorEvidence": "480000-540000ms：字幕用作品名联句并补充《越女剑》，明确总计15部。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "这些作品中稿费最高的是哪一部，具体有多少？",
+          "standaloneQuestion": "金庸的武侠作品中稿费最高的是哪一部，具体稿费金额是多少？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": [],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 3,
+            "anchorEvidence": "不可回答：全片讨论金庸的笔名、作品与文学影响，但未提供任何作品稿费或金额。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "manual_absence_pass_retriever_nonempty_by_design",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-62-chain-03",
+      "mediaRef": "sha256:7780b0edcdf062403bc0903a705ab444",
+      "sourceVideoTag": "video-A-wuxia",
+      "sourceDistributionNote": "CC 字幕主导，6 章节，武侠文化类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "视频称谁是武侠荧屏上的第一张脸，他在几十年间主演了多少部同一人物题材的电影？",
+          "standaloneQuestion": "视频称谁是武侠荧屏上的第一张脸，他在几十年间主演了多少部同一人物题材的电影？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "武侠荧屏上的第一张脸是关德兴",
+            "关德兴在几十年间主演了77部黄飞鸿电影",
+            "关德兴成就了黄飞鸿"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 679000,
+              "endMs": 720000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 720000,
+              "endMs": 780000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": null,
+            "anchorEvidence": "679000-780000ms：关德兴被称为武侠荧屏上的第一张脸，几十年间主演77部黄飞鸿电影。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "把功夫真正推向世界的那位呢？",
+          "standaloneQuestion": "视频称哪位武术电影人把功夫真正推向世界，他通过哪些电影让中国功夫进入世界影坛？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "将功夫真正推向世界的是李小龙",
+            "《精武门》里陈真一脚踢碎东亚病夫的牌匾",
+            "随后《猛龙过江》《龙争虎斗》，中国功夫打进世界影坛"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 720000,
+              "endMs": 780000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 780000,
+              "endMs": 840000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 1,
+            "anchorEvidence": "720000-840000ms：李小龙被称为把功夫推向世界的人，《猛龙过江》《龙争虎斗》让中国功夫进入世界影坛。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 3,
+          "category": "对比或约束追问",
+          "question": "这两个人对武侠影视的贡献有什么不同？",
+          "standaloneQuestion": "视频如何分别描述关德兴与李小龙对武侠影视和功夫传播的贡献？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "关德兴在几十年间主演了77部黄飞鸿电影",
+            "不是黄飞鸿成就了关德兴，而是关德兴成就了黄飞鸿",
+            "李小龙通过《猛龙过江》《龙争虎斗》让中国功夫打进世界影坛"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 679000,
+              "endMs": 720000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 720000,
+              "endMs": 780000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 780000,
+              "endMs": 840000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 2,
+            "anchorEvidence": "679000-840000ms：前者通过77部影片塑造黄飞鸿，后者让中国功夫进入世界影坛。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "他们第一次见面是哪一年，后来合作拍过哪部电影？",
+          "standaloneQuestion": "关德兴与李小龙第一次见面是哪一年，他们后来合作拍过哪部电影？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": [],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 3,
+            "anchorEvidence": "不可回答：全片分别介绍两人的贡献，但未提及首次见面时间或合作影片。",
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "manual_absence_pass_retriever_nonempty_by_design",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-66-chain-01",
+      "mediaRef": "sha256:71fc6799ebe095119f95b23fee72f4f7",
+      "sourceVideoTag": "video-B-transformer-paper",
+      "sourceDistributionNote": "CC 字幕主导，8 章节，AI 论文精读类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "视频如何概括当时主流的序列转录模型架构？",
+          "standaloneQuestion": "视频如何概括当时主流的序列转录模型架构？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "主流序列转录模型主要依赖复杂的循环神经网络或卷积神经网络",
+            "这类模型通常采用编码器—解码器架构"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 201000,
+              "endMs": 240000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": null,
+            "anchorEvidence": [
+              {
+                "startMs": 201000,
+                "endMs": 240000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "那它提出的新模型呢？",
+          "standaloneQuestion": "视频中的 Transformer 与使用卷积神经网络的序列模型在核心计算机制上有什么不同？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "Transformer是第一个只依赖于自注意力来做这种encode到decode的架构的模型",
+            "卷积神经网络对于比较长的序列难以建模，而注意力机制每一次能看到所有位置"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 900000,
+              "endMs": 960000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 960000,
+              "endMs": 994000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 1,
+            "anchorEvidence": [
+              {
+                "startMs": 900000,
+                "endMs": 960000,
+                "sourceType": "CC"
+              },
+              {
+                "startMs": 960000,
+                "endMs": 994000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "实验表现怎么样？",
+          "standaloneQuestion": "Transformer 在视频提到的两个机器翻译实验中表现怎么样？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "英语到德语任务达到 28.4 BLEU，比当时最好结果高 2 BLEU",
+            "英语到法语任务中，单模型效果优于其他模型",
+            "训练使用 8 个 GPU，耗时 3.5 天"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 360000,
+              "endMs": 420000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 420000,
+              "endMs": 480000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 2,
+            "anchorEvidence": [
+              {
+                "startMs": 360000,
+                "endMs": 420000,
+                "sourceType": "CC"
+              },
+              {
+                "startMs": 420000,
+                "endMs": 480000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 4,
+          "category": "对比或约束追问",
+          "question": "那和卷积网络相比，它处理长序列和多输出通道的方式有什么不同？",
+          "standaloneQuestion": "与卷积神经网络相比，Transformer 如何处理长序列，又如何获得类似多输出通道的效果？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "卷积神经网络对于比较长的序列难以建模",
+            "Transformer的注意力机制每一次能看到所有位置，一层就能够看到整个序列",
+            "多头注意力机制可以模拟卷积神经网络多输出通道的效果"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 875000,
+              "endMs": 900000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 900000,
+              "endMs": 960000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": [
+              1,
+              2
+            ],
+            "anchorEvidence": [
+              {
+                "startMs": 875000,
+                "endMs": 900000,
+                "sourceType": "CC"
+              },
+              {
+                "startMs": 900000,
+                "endMs": 960000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-66-chain-02",
+      "mediaRef": "sha256:71fc6799ebe095119f95b23fee72f4f7",
+      "sourceVideoTag": "video-B-transformer-paper",
+      "sourceDistributionNote": "CC 字幕主导，8 章节，AI 论文精读类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "视频为什么在 Scaled Dot-Product Attention 中选用点积而不是加型注意力？",
+          "standaloneQuestion": "视频为什么在 Scaled Dot-Product Attention 中选用点积而不是加型注意力？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "两种注意力机制的效果相近",
+            "点积注意力实现更简单且更高效，可以用两次矩阵乘法完成计算"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2400000,
+              "endMs": 2460000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": null,
+            "anchorEvidence": [
+              {
+                "startMs": 2400000,
+                "endMs": 2460000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "那它为什么还要除以根号 d_k？",
+          "standaloneQuestion": "Scaled Dot-Product Attention 为什么要把 query 与 key 的点积除以根号 d_k？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "d_k 较大时，点积的绝对值可能变大",
+            "较大的点积会让 softmax 输出更趋近于 1 和 0，因此需要用根号 d_k 缩放"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2400000,
+              "endMs": 2460000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 1,
+            "anchorEvidence": [
+              {
+                "startMs": 2400000,
+                "endMs": 2460000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "不这么做会怎样？",
+          "standaloneQuestion": "Scaled Dot-Product Attention 如果不除以根号 d_k，会对 softmax 和梯度造成什么影响？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "softmax 输出会更向 1 和 0 两端靠拢",
+            "梯度会变小，导致训练难以继续推进"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2400000,
+              "endMs": 2460000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 2460000,
+              "endMs": 2520000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 2,
+            "anchorEvidence": [
+              {
+                "startMs": 2400000,
+                "endMs": 2460000,
+                "sourceType": "CC"
+              },
+              {
+                "startMs": 2460000,
+                "endMs": 2520000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "作者还试过别的缩放方式吗，结果怎样？",
+          "standaloneQuestion": "论文作者还尝试了哪些 Scaled Dot-Product Attention 的替代缩放方式，各自实验结果怎样？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": [],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 3,
+            "anchorEvidence": [],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "manual_absence_pass_retriever_nonempty_by_design",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-66-chain-03",
+      "mediaRef": "sha256:71fc6799ebe095119f95b23fee72f4f7",
+      "sourceVideoTag": "video-B-transformer-paper",
+      "sourceDistributionNote": "CC 字幕主导，8 章节，AI 论文精读类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "视频中 Transformer 编码器每层包含哪两个子层？",
+          "standaloneQuestion": "视频中 Transformer 编码器每层包含哪两个子层？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "第一个子层是多头自注意力",
+            "第二个子层是逐位置的全连接前馈网络，也就是 MLP"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1380000,
+              "endMs": 1440000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": null,
+            "anchorEvidence": [
+              {
+                "startMs": 1380000,
+                "endMs": 1440000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "那它的解码器呢？",
+          "standaloneQuestion": "Transformer 解码器每层由哪些子层构成，并用什么方式限制未来信息？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "解码器包含与编码器相同的两个子层，并增加第三个多头注意力子层",
+            "解码器使用带掩码的注意力，使第 t 个时刻看不到 t 之后的信息"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1920000,
+              "endMs": 1980000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 1980000,
+              "endMs": 2040000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 1,
+            "anchorEvidence": [
+              {
+                "startMs": 1920000,
+                "endMs": 1980000,
+                "sourceType": "CC"
+              },
+              {
+                "startMs": 1980000,
+                "endMs": 2040000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 3,
+          "category": "对比或约束追问",
+          "question": "那两者在信息可见性上有什么区别，解码器怎样避免看到未来内容？",
+          "standaloneQuestion": "Transformer 编码器和解码器在信息可见性上有什么区别，解码器如何避免看到未来输出？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "编码器很有可能一次性能看全整个句子",
+            "解码器是自回归模型，过去时刻的输出会作为当前时刻的输入",
+            "带掩码的注意力机制保证第t个时刻看不到t时刻以后的输入"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1080000,
+              "endMs": 1140000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 1920000,
+              "endMs": 1980000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 1980000,
+              "endMs": 2040000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": [
+              1,
+              2
+            ],
+            "anchorEvidence": [
+              {
+                "startMs": 1080000,
+                "endMs": 1140000,
+                "sourceType": "CC"
+              },
+              {
+                "startMs": 1920000,
+                "endMs": 1980000,
+                "sourceType": "CC"
+              },
+              {
+                "startMs": 1980000,
+                "endMs": 2040000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "作者做过层数消融吗，结果怎样？",
+          "standaloneQuestion": "论文作者是否比较了不同 Transformer 编码器和解码器层数的效果，具体结果怎样？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": [],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 3,
+            "anchorEvidence": [],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "manual_absence_pass_retriever_nonempty_by_design",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-68-chain-01",
+      "mediaRef": "sha256:f9a6c7ee9f75fa6dc4f5731846dd59c0",
+      "sourceVideoTag": "video-C-data-structure",
+      "sourceDistributionNote": "CC 字幕（字幕重建后），10 章节，数据结构教学类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "视频介绍了哪四种常考的逻辑结构？",
+          "standaloneQuestion": "视频介绍了哪四种常考的逻辑结构？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "集合和线性结构",
+            "树形结构和图形结构"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 60000,
+              "endMs": 120000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": null,
+            "anchorEvidence": [
+              {
+                "startMs": 60000,
+                "endMs": 120000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "它们各自表示什么关系？",
+          "standaloneQuestion": "集合、线性结构、树形结构和图形结构各自表示什么关系？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "集合中的元素之间没有任何关系，线性结构是一对一",
+            "树形结构是一对多，图形结构是多对多"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 60000,
+              "endMs": 120000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 1,
+            "anchorEvidence": [
+              {
+                "startMs": 60000,
+                "endMs": 120000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "哪些属于非线性结构？",
+          "standaloneQuestion": "集合、线性结构、树形结构和图形结构中，哪些属于非线性结构？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "除了线性结构以外，集合、树形结构和图形结构都属于非线性结构"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 120000,
+              "endMs": 147000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 2,
+            "anchorEvidence": [
+              {
+                "startMs": 120000,
+                "endMs": 147000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 4,
+          "category": "对比或约束追问",
+          "question": "那逻辑结构和存储结构是什么关系，同一种逻辑结构只能有一种存储方式吗？",
+          "standaloneQuestion": "逻辑结构和存储结构是什么关系，同一种逻辑结构是否只能对应一种存储方式？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "逻辑结构独立于计算机",
+            "存储结构是逻辑结构在计算机中的体现",
+            "同一种逻辑结构可以用顺序存储，也可以用链式存储来表示"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 60000,
+              "endMs": 120000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 120000,
+              "endMs": 147000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": [
+              1,
+              3
+            ],
+            "anchorEvidence": [
+              {
+                "startMs": 60000,
+                "endMs": 120000,
+                "sourceType": "CC"
+              },
+              {
+                "startMs": 120000,
+                "endMs": 147000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-68-chain-02",
+      "mediaRef": "sha256:f9a6c7ee9f75fa6dc4f5731846dd59c0",
+      "sourceVideoTag": "video-C-data-structure",
+      "sourceDistributionNote": "CC 字幕（字幕重建后），10 章节，数据结构教学类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "直接插入排序和冒泡排序的平均、最坏时间复杂度及稳定性分别怎样？",
+          "standaloneQuestion": "直接插入排序和冒泡排序的平均、最坏时间复杂度及稳定性分别怎样？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "直接插入排序的平均复杂度和最坏复杂度都是 O(n²)，是稳定算法",
+            "冒泡排序的平均复杂度和最坏复杂度都是 O(n²)，也是稳定的"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2400000,
+              "endMs": 2460000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": null,
+            "anchorEvidence": [
+              {
+                "startMs": 2400000,
+                "endMs": 2460000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "那下一种呢？",
+          "standaloneQuestion": "选择排序的平均、最坏时间复杂度及稳定性怎样？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "选择排序的平均复杂度和最坏复杂度都是 O(n²)",
+            "选择排序是不稳定的"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2400000,
+              "endMs": 2460000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 1,
+            "anchorEvidence": [
+              {
+                "startMs": 2400000,
+                "endMs": 2460000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "还有哪些是不稳定的？",
+          "standaloneQuestion": "视频介绍的排序算法中，除选择排序外还有哪些是不稳定的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "快速排序和堆排序是不稳定的",
+            "希尔排序也是不稳定的"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2460000,
+              "endMs": 2520000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 2,
+            "anchorEvidence": [
+              {
+                "startMs": 2460000,
+                "endMs": 2520000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "它们最初发表的年份和论文标题分别是什么？",
+          "standaloneQuestion": "视频提到的排序算法最初分别发表于哪一年，对应的论文标题是什么？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": [],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 3,
+            "anchorEvidence": [],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "manual_absence_pass_retriever_nonempty_by_design",
+              "entailmentLeakage": "owner_adjudicated_judge_false_positive",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-68-chain-03",
+      "mediaRef": "sha256:f9a6c7ee9f75fa6dc4f5731846dd59c0",
+      "sourceVideoTag": "video-C-data-structure",
+      "sourceDistributionNote": "CC 字幕（字幕重建后），10 章节，数据结构教学类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "折半查找需要满足哪些条件，它的时间复杂度是多少？",
+          "standaloneQuestion": "折半查找需要满足哪些条件，它的时间复杂度是多少？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "线性表有序",
+            "支持随机访问",
+            "时间复杂度是 O(log n)"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2580000,
+              "endMs": 2640000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": null,
+            "anchorEvidence": [
+              {
+                "startMs": 2580000,
+                "endMs": 2640000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "与它一起介绍的顺序查找呢？",
+          "standaloneQuestion": "顺序查找适合什么数据，它的最坏时间复杂度是多少？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "顺序查找不要求数据有序",
+            "适合数据量小或无序的数据",
+            "最坏时间复杂度是 O(n)"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2580000,
+              "endMs": 2640000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 1,
+            "anchorEvidence": [
+              {
+                "startMs": 2580000,
+                "endMs": 2640000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 3,
+          "category": "对比或约束追问",
+          "question": "如果面对小规模无序数据，这两种方法该选哪一个？为什么？",
+          "standaloneQuestion": "面对小规模无序数据时，顺序查找和折半查找该选哪一个，为什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "应选择顺序查找，它不要求数据有序，适合数据量小或无序的数据",
+            "折半查找要求线性表有序并支持随机访问"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2520000,
+              "endMs": 2580000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 2580000,
+              "endMs": 2640000,
+              "sourceType": "CC"
+            }
+          ],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": [
+              1,
+              2
+            ],
+            "anchorEvidence": [
+              {
+                "startMs": 2520000,
+                "endMs": 2580000,
+                "sourceType": "CC"
+              },
+              {
+                "startMs": 2580000,
+                "endMs": 2640000,
+                "sourceType": "CC"
+              }
+            ],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "pass_top5",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "那视频有没有给出装载因子为 0.75 时，线性探测的平均查找长度具体是多少？",
+          "standaloneQuestion": "视频有没有给出散列表装载因子为 0.75 时，线性探测的平均查找长度？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": [],
+          "provenance": {
+            "generationMethod": "codex-assisted-manual-grounding",
+            "parentTurnNo": 3,
+            "anchorEvidence": [],
+            "autoChecks": {
+              "standaloneRewrite": "manual_pass",
+              "retrievalHit": "manual_absence_pass_retriever_nonempty_by_design",
+              "entailmentLeakage": "qwen-plus_pass",
+              "dedupReview": "pass_similarity_lte_0.92"
+            },
+            "humanReviewed": false,
+            "humanReviewNote": "待所有者人工复核"
+          }
+        }
+      ]
+    }
+  ]
+}

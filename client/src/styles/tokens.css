@@ -1,0 +1,44 @@
+:root {
+  /* ===== 色彩：安静的知识工作台（品牌浅绿，初版建议值，可视觉深化） ===== */
+  --color-bg: #f6f5f2; /* 暖灰浅色主背景 */
+  --color-surface: #ffffff; /* 内容容器 */
+  --color-border: #e6e3dd; /* 轻边框 */
+  --color-text-strong: #21201c; /* 标题 */
+  --color-text-body: #3d3a34; /* 正文 */
+  --color-text-muted: #8b867c; /* 辅助信息 */
+  --color-brand: #57b98a; /* 品牌浅绿：选中态、时间点、引用编号、高亮描边 */
+  --color-brand-strong: #2f6e5b; /* 浅绿系深档：主要按钮底色与按压态 */
+  --color-brand-soft: #eaf6ef; /* 浅绿浅底：引用高亮、当前播放引用、选中背景 */
+  --color-success: #2e7d4f;
+  --color-warning: #b26a00;
+  --color-danger: #c0392b;
+  --color-processing: #5b6b7b;
+
+  /* ===== 字号 ===== */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --text-xl: 22px;
+
+  /* ===== 间距 ===== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* ===== 圆角 ===== */
+  --radius-card: 8px;
+  --radius-control: 6px;
+  --radius-tag: 4px;
+
+  /* ===== 阴影（仅浮层/播放器悬浮/拖拽反馈） ===== */
+  --shadow-overlay: 0 2px 8px rgba(31, 28, 22, 0.08);
+  --shadow-float: 0 6px 20px rgba(31, 28, 22, 0.12);
+
+  /* ===== 动效 ===== */
+  --motion-fast: 160ms ease;
+}

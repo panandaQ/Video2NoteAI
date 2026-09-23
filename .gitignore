@@ -1,0 +1,37 @@
+.idea/
+.DS_Store
+*.iml
+.env
+.env.*
+!.env.example
+# B 站登录态 Cookie（契约 §11 红线，绝不能入库）
+cookies.txt
+*.cookies.txt
+.secrets/
+server/target/
+client/node_modules/
+client/dist/
+mysql/data/
+mysql/logs/
+redis/data/
+qdrant/data/
+minio/data/
+# 本地临时产物与工具状态（不入库）
+.tmp/
+logs/
+graphify-out/
+client/.npm-cache/
+.claude/
+.omx/
+.spec-workflow/
+.cleanup/
+.playwright-mcp/
+# 设计稿/参考文档/评测中间产物（本地参考，不入库）
+docs/
+AGENTS.md
+bilibili-player-api.md
+postman/
+note_52.json
+# B 站登录态 Cookie 变体（契约 §11 红线，绝不能入库）
+bilibili-cookies-*.txt
+ 
