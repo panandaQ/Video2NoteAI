@@ -170,10 +170,10 @@ docker compose --env-file .env ps
 | 服务 | 本地地址/端口 |
 | --- | --- |
 | MySQL | `127.0.0.1:3307` |
-| Redis | `127.0.0.1:6379` |
+| Redis | `127.0.0.1:16379` |
 | MinIO API | `http://127.0.0.1:9000` |
 | MinIO Console | `http://127.0.0.1:9001` |
-| Qdrant | `http://127.0.0.1:6333` |
+| Qdrant | `http://127.0.0.1:16333` |
 | RocketMQ NameServer | `127.0.0.1:9876` |
 | RocketMQ Broker | `127.0.0.1:10911` |
 
@@ -347,5 +347,3 @@ Video2NoteAI/
 ├── docker-compose.yml       # 本地基础服务编排
 └── .env.example             # 环境变量模板
 ```
-
-
