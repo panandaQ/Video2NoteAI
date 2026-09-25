@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import HomeContinueCard from '../components/home/HomeContinueCard.vue'
 import HomeProcessingPanel from '../components/home/HomeProcessingPanel.vue'
@@ -29,9 +29,19 @@ const continueMedia = computed(() => {
   return library.items.find((item) => item.id === mediaId) ?? library.items[0] ?? null
 })
 
-onMounted(() => {
+function loadHomeData() {
   void Promise.all([library.fetchList(), history.load()])
-})
+}
+
+// 登录后可能在同一个前端会话中直接进入首页；以当前用户为刷新边界，
+// 避免只依赖组件首次挂载而沿用登录前的空数据。
+watch(
+  () => auth.user?.id ?? null,
+  (userId) => {
+    if (userId !== null) loadHomeData()
+  },
+  { immediate: true }
+)
 
 async function openMedia(mediaId: number) {
   await router.push({ name: 'workbench', params: { mediaId: String(mediaId) } })

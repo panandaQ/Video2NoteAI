@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import HomeView from './HomeView.vue'
+import { useAuthStore } from '../stores/auth'
 
 const mocks = vi.hoisted(() => ({
   fetchList: vi.fn(),
@@ -27,7 +29,6 @@ const mocks = vi.hoisted(() => ({
   }
 }))
 
-vi.mock('../stores/auth', () => ({ useAuthStore: () => ({ user: { id: 2, nickname: 'test1' } }) }))
 vi.mock('../stores/library', () => ({
   useLibraryStore: () => ({ ...mocks.library, fetchList: mocks.fetchList })
 }))
@@ -65,6 +66,11 @@ const ConversationsStub = defineComponent({
 
 beforeEach(() => {
   vi.clearAllMocks()
+  setActivePinia(createPinia())
+  useAuthStore().$patch({
+    token: 'test-token',
+    user: { id: 2, nickname: 'test1' }
+  })
   mocks.fetchList.mockResolvedValue(undefined)
   mocks.load.mockResolvedValue(undefined)
   mocks.prepareOpen.mockResolvedValue(62)
@@ -113,5 +119,25 @@ describe('HomeView', () => {
 
     expect(mocks.forget).toHaveBeenCalledWith(29)
     expect(mocks.fetchList).toHaveBeenCalledTimes(2)
+  })
+
+  it('登录用户变更后重新拉取首页事实', async () => {
+    mount(HomeView, {
+      global: {
+        stubs: {
+          HomeContinueCard: ContinueStub,
+          HomeProcessingPanel: ProcessingStub,
+          HomeRecentConversations: ConversationsStub,
+          HomeRecentVideos: true,
+          Button: { template: '<button><slot /></button>' }
+        }
+      }
+    })
+
+    useAuthStore().$patch({ user: { id: 3, nickname: 'another-user' } })
+    await nextTick()
+
+    expect(mocks.fetchList).toHaveBeenCalledTimes(2)
+    expect(mocks.load).toHaveBeenCalledTimes(2)
   })
 })
