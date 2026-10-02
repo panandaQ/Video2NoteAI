@@ -222,8 +222,8 @@ public class EvidenceGroundedAnswerService {
             VideoEvidenceHit hit = candidates.get(i);
             lines.add(new EvidencePromptLine(
                     evidenceId(i), hit.startMs(), hit.endMs(), hit.source(),
-                    hit.transcript(),
-                    String.join(" ", hit.ocrTexts())));
+                    hit.transcript(), hit.transcriptSource(),
+                    String.join(" ", hit.ocrTexts()), hit.evidenceFrames()));
         }
         return lines;
     }

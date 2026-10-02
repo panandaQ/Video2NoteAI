@@ -19,12 +19,28 @@ public record EvidencePromptLine(
         long endMs,
         String source,
         String transcript,
-        String visualText
+        String transcriptSource,
+        String visualText,
+        java.util.List<String> evidenceFrames
 ) {
     public EvidencePromptLine {
         id = id == null ? "" : id;
         source = source == null ? "" : source;
         transcript = transcript == null ? "" : transcript;
+        transcriptSource = transcriptSource == null || transcriptSource.isBlank()
+                ? "UNKNOWN" : transcriptSource;
         visualText = visualText == null ? "" : visualText;
+        evidenceFrames = evidenceFrames == null ? java.util.List.of() : java.util.List.copyOf(evidenceFrames);
+    }
+
+    public EvidencePromptLine(String id, long startMs, long endMs, String source,
+                              String transcript, String visualText) {
+        this(id, startMs, endMs, source, transcript, "UNKNOWN", visualText, java.util.List.of());
+    }
+
+    public EvidencePromptLine(String id, long startMs, long endMs, String source,
+                              String transcript, String visualText,
+                              java.util.List<String> evidenceFrames) {
+        this(id, startMs, endMs, source, transcript, "UNKNOWN", visualText, evidenceFrames);
     }
 }

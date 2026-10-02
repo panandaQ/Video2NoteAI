@@ -401,15 +401,15 @@ public class VideoContextService {
             long start = sliceStarts.get(i);
             long end = i + 1 < sliceStarts.size() ? sliceStarts.get(i + 1) : sliceEnd(start, durationMs);
             SegmentBuilder builder = new SegmentBuilder(start, end);
-            boolean hasCc = false;
-            boolean hasAsr = false;
             for (TranscriptSegment transcript : transcripts) {
                 // 重叠归属：跨章节边界的 cue 完整进入两侧切片（时间范围由切片保证不跨章），
                 // 只按起点归属会让另一侧切片空掉、丢失该章证据。
                 if (transcript.startMs() < end && transcript.endMs() > start) {
-                    builder.transcripts.add(transcript.text());
-                    hasCc |= transcript.source() == TranscriptSource.CC;
-                    hasAsr |= transcript.source() == TranscriptSource.ASR;
+                    if (transcript.source() == TranscriptSource.CC) {
+                        builder.ccTranscripts.add(transcript.text());
+                    } else {
+                        builder.asrTranscripts.add(transcript.text());
+                    }
                 }
             }
             for (FramePart frame : frames) {
@@ -420,11 +420,11 @@ public class VideoContextService {
                     builder.evidenceFrames.add(frame.frameName());
                 }
             }
-            if (builder.transcripts.isEmpty() && builder.ocrTexts.isEmpty()) {
+            if (builder.ccTranscripts.isEmpty() && builder.asrTranscripts.isEmpty()
+                    && builder.ocrTexts.isEmpty()) {
                 continue;
             }
             builder.chapterId = chapterIdAt(chapters, start, end);
-            builder.source = hasCc ? TranscriptSource.CC : hasAsr ? TranscriptSource.ASR : TranscriptSource.ASR;
             segments.add(builder.build());
         }
         return segments;
@@ -572,12 +572,13 @@ public class VideoContextService {
         T get() throws Exception;
     }
 
-    private static class SegmentBuilder {        private final long startMs;
+    private static class SegmentBuilder {
+        private final long startMs;
         private final long endMs;
-        private final List<String> transcripts = new ArrayList<>();
+        private final List<String> ccTranscripts = new ArrayList<>();
+        private final List<String> asrTranscripts = new ArrayList<>();
         private final List<String> ocrTexts = new ArrayList<>();
         private final List<String> evidenceFrames = new ArrayList<>();
-        private TranscriptSource source = TranscriptSource.ASR;
         private String chapterId;
 
         private SegmentBuilder(long startMs, long endMs) {
@@ -586,13 +587,15 @@ public class VideoContextService {
         }
 
         private VideoContext.VideoSegment build() {
+            boolean useCc = !ccTranscripts.isEmpty();
+            List<String> selected = useCc ? ccTranscripts : asrTranscripts;
             return new VideoContext.VideoSegment(
                     startMs,
                     endMs,
-                    String.join("\n", transcripts),
+                    String.join("\n", selected),
                     ocrTexts,
                     evidenceFrames,
-                    source,
+                    useCc ? TranscriptSource.CC : TranscriptSource.ASR,
                     chapterId);
         }
     }

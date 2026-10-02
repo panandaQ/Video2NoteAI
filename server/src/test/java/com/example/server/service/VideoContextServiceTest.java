@@ -86,6 +86,17 @@ class VideoContextServiceTest {
     }
 
     @Test
+    void subtitleWinsWhenCcAndAsrOverlapTheSameSlice() {
+        List<VideoContext.VideoSegment> segments = VideoContextService.merge(
+                List.of(cc(1_000, 20_000, "字幕原文"), asr(1_000, 20_000, "ASR 误识别")),
+                List.of(), List.of(), 60_000L);
+
+        assertEquals(1, segments.size());
+        assertEquals("字幕原文", segments.get(0).transcript());
+        assertEquals(TranscriptSource.CC, segments.get(0).source());
+    }
+
+    @Test
     void ocrOnlySliceDefaultsToAsrSource() {
         // 无转录只有 OCR 的切片：source 缺省 ASR（toHit 侧只输出 "OCR"，不误标 ASR 转录）
         List<VideoContext.VideoSegment> segments = VideoContextService.merge(

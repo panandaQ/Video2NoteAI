@@ -8,6 +8,7 @@ import com.example.server.dto.knowledge.HistoryTurn;
 import com.example.server.dto.knowledge.QueryPlan;
 import com.example.server.utils.DeepSeekUtils;
 import com.example.server.utils.EmbeddingUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -48,15 +49,27 @@ public class VideoEvidenceRetrievalService {
     private final EmbeddingUtils embeddingUtils;
     private final QdrantVectorStore vectorStore;
     private final AgentTelemetry telemetry;
+    private final HybridChunkRetrievalService hybridRetrievalService;
 
+    @Autowired
     public VideoEvidenceRetrievalService(DeepSeekUtils deepSeekUtils,
                                          EmbeddingUtils embeddingUtils,
                                          QdrantVectorStore vectorStore,
-                                         AgentTelemetry telemetry) {
+                                         AgentTelemetry telemetry,
+                                         HybridChunkRetrievalService hybridRetrievalService) {
         this.deepSeekUtils = deepSeekUtils;
         this.embeddingUtils = embeddingUtils;
         this.vectorStore = vectorStore;
         this.telemetry = telemetry;
+        this.hybridRetrievalService = hybridRetrievalService;
+    }
+
+    /** Legacy unit-test/embedded construction; Spring uses the multi-stage constructor above. */
+    public VideoEvidenceRetrievalService(DeepSeekUtils deepSeekUtils,
+                                         EmbeddingUtils embeddingUtils,
+                                         QdrantVectorStore vectorStore,
+                                         AgentTelemetry telemetry) {
+        this(deepSeekUtils, embeddingUtils, vectorStore, telemetry, null);
     }
 
     /**
@@ -89,6 +102,17 @@ public class VideoEvidenceRetrievalService {
                                                      String goal,
                                                      List<VideoChunk> chunks,
                                                      String chapterId) {
+        if (hybridRetrievalService != null) {
+            List<VideoChunk> scoped = chapterId == null ? chunks : chunks.stream()
+                    .filter(chunk -> java.util.Objects.equals(chapterId, chunk.chapterId()))
+                    .toList();
+            return hybridRetrievalService.search(mediaId, planQuery(goal, List.of()), scoped).stream()
+                    .flatMap(hit -> scoped.stream().flatMap(chunk -> chunk.rawSegments().stream())
+                            .filter(segment -> segment.startMs() == hit.startMs()
+                                    && segment.endMs() == hit.endMs()))
+                    .distinct()
+                    .toList();
+        }
         return rank(mediaId, planQuery(goal, List.of()).toRetrievalIntent(), chunks, chapterId).stream()
                 .map(ScoredSegment::segment)
                 .toList();
@@ -103,6 +127,9 @@ public class VideoEvidenceRetrievalService {
     public List<VideoEvidenceHit> search(Long mediaId,
                                          QueryPlan plan,
                                          List<VideoChunk> chunks) {
+        if (hybridRetrievalService != null) {
+            return hybridRetrievalService.search(mediaId, plan, chunks);
+        }
         return rank(mediaId, plan.toRetrievalIntent(), chunks, null).stream()
                 .limit(MAX_USER_HITS)
                 .map(this::toHit)
@@ -143,6 +170,10 @@ public class VideoEvidenceRetrievalService {
     }
 
     public void index(Long mediaId, List<VideoChunk> chunks) {
+        if (hybridRetrievalService != null) {
+            hybridRetrievalService.index(mediaId, chunks);
+            return;
+        }
         try {
             vectorStore.upsert(mediaId, chunks);
             telemetry.incrementCurrent("vectorStoreWrites", chunks.size());

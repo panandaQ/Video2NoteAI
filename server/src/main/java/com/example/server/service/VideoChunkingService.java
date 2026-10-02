@@ -4,6 +4,7 @@ import com.example.server.dto.ChunkCleanResult;
 import com.example.server.dto.VideoChapter;
 import com.example.server.dto.VideoChunk;
 import com.example.server.dto.VideoContext;
+import com.example.server.dto.TranscriptSource;
 import com.example.server.utils.DeepSeekUtils;
 import com.example.server.utils.EmbeddingUtils;
 import org.springframework.stereotype.Service;
@@ -149,11 +150,12 @@ public class VideoChunkingService {
     private VideoChunk assemble(VideoChunk raw, ChunkCleanResult result) {
         List<String> keywords = normalizeTexts(result.normalizedTerms());
         List<String> originalTerms = normalizeTexts(result.originalTerms());
-        String embeddingText = result.summary() + "\n" + String.join(" ", keywords);
+        // Dense retrieval is grounded in original subtitles first; ASR is only the explicit fallback.
+        String embeddingText = preferredTranscript(raw.rawSegments());
         return new VideoChunk(
                 raw.startTime(), raw.endTime(),
                 result.summary(), keywords, originalTerms, result.corrections(), raw.rawSegments(),
-                embed(embeddingText),
+                embedTranscript(embeddingText),
                 raw.analysisVersion(), raw.chapterId(), raw.chapterTitle(),
                 raw.chapterStartMs(), raw.chapterEndMs());
     }
@@ -169,7 +171,7 @@ public class VideoChunkingService {
         return new VideoChunk(
                 raw.startTime(), raw.endTime(),
                 summary, List.of(), List.of(), List.of(), raw.rawSegments(),
-                embed(summary),
+                embedTranscript(preferredTranscript(raw.rawSegments())),
                 raw.analysisVersion(), raw.chapterId(), raw.chapterTitle(),
                 raw.chapterStartMs(), raw.chapterEndMs());
     }
@@ -181,6 +183,30 @@ public class VideoChunkingService {
             telemetry.incrementCurrent("chunkEmbeddingFallbacks", 1);
             return List.of();
         }
+    }
+
+    private List<Double> embedTranscript(String transcript) {
+        if (transcript == null || transcript.isBlank()) return List.of();
+        return embed(transcript);
+    }
+
+    private String preferredTranscript(List<VideoContext.VideoSegment> segments) {
+        List<String> cc = segments.stream()
+                .filter(segment -> segment.source() == TranscriptSource.CC)
+                .map(VideoContext.VideoSegment::transcript)
+                .filter(text -> text != null && !text.isBlank())
+                .toList();
+        if (!cc.isEmpty()) return String.join("\n", cc);
+        List<String> asr = segments.stream()
+                .filter(segment -> segment.source() == TranscriptSource.ASR)
+                .map(VideoContext.VideoSegment::transcript)
+                .filter(text -> text != null && !text.isBlank())
+                .toList();
+        if (!asr.isEmpty()) {
+            telemetry.incrementCurrent("chunkTranscriptAsrFallbacks", 1);
+            return String.join("\n", asr);
+        }
+        return "";
     }
 
     private List<String> normalizeTexts(List<String> texts) {
