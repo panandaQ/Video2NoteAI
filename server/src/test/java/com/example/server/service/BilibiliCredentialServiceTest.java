@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -55,9 +57,20 @@ class BilibiliCredentialServiceTest {
     @Test
     void saveUpdatesWhenPresent() {
         when(mapper.selectById(USER_ID)).thenReturn(new UserBilibiliCredential());
+        when(mapper.updateCookie(eq(USER_ID), anyString())).thenReturn(1);
         service.save(USER_ID, "SESSDATA=abc");
-        verify(mapper).updateById(any(UserBilibiliCredential.class));
+        verify(mapper).updateCookie(eq(USER_ID), anyString());
+        verify(mapper, never()).updateById(any(UserBilibiliCredential.class));
         verify(mapper, never()).insert(any(UserBilibiliCredential.class));
+    }
+
+    @Test
+    void saveFailsWhenExistingCredentialUpdateAffectsNoRows() {
+        when(mapper.selectById(USER_ID)).thenReturn(new UserBilibiliCredential());
+        when(mapper.updateCookie(eq(USER_ID), anyString())).thenReturn(0);
+
+        assertThrows(IllegalStateException.class, () -> service.save(USER_ID, "SESSDATA=abc"));
+        verify(mapper).updateCookie(eq(USER_ID), anyString());
     }
 
     @Test
@@ -106,6 +119,7 @@ class BilibiliCredentialServiceTest {
         assertEquals(ErrorCode.SERVICE_UNAVAILABLE, error.errorCode());
         verify(mapper, never()).insert(any(UserBilibiliCredential.class));
         verify(mapper, never()).updateById(any(UserBilibiliCredential.class));
+        verify(mapper, never()).updateCookie(any(), anyString());
     }
 
     @Test

@@ -1,15 +1,20 @@
 package com.example.server.service;
 
+import com.example.server.config.NoteBatchProperties;
 import com.example.server.dto.AgentState;
 import com.example.server.dto.AnalysisMode;
 import com.example.server.dto.AnalysisResult;
+import com.example.server.dto.NoteBatchResult;
+import com.example.server.dto.NoteInputBatch;
 import com.example.server.dto.TaskStatus;
 import com.example.server.dto.TaskStage;
 import com.example.server.dto.VideoContext;
 import com.example.server.service.mode.ModeProfile;
+import com.example.server.service.ingest.VideoNoteProfile;
 import com.example.server.utils.DeepSeekUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +35,11 @@ public class AgentLoopService {
     private final EvidenceVerificationService evidenceVerificationService;
     private final TaskEventService taskEventService;
     private final AgentBudgetService budgetService;
+    private final NoteBatchBuilder noteBatchBuilder;
     private final int maxRounds;
     private final double maxEstimatedCost;
 
+    /** 兼容旧测试/嵌入式调用方；默认笔记批处理需要使用带 NoteBatchBuilder 的构造器。 */
     public AgentLoopService(DeepSeekUtils deepSeekUtils,
                             LongVideoContextService longVideoContextService,
                             AgentCheckpointService checkpointService,
@@ -40,6 +47,20 @@ public class AgentLoopService {
                             EvidenceVerificationService evidenceVerificationService,
                             TaskEventService taskEventService,
                             AgentBudgetService budgetService) {
+        this(deepSeekUtils, longVideoContextService, checkpointService, telemetry,
+                evidenceVerificationService, taskEventService, budgetService,
+                new NoteBatchBuilder(new NoteBatchProperties()));
+    }
+
+    @Autowired
+    public AgentLoopService(DeepSeekUtils deepSeekUtils,
+                            LongVideoContextService longVideoContextService,
+                            AgentCheckpointService checkpointService,
+                            AgentTelemetry telemetry,
+                            EvidenceVerificationService evidenceVerificationService,
+                            TaskEventService taskEventService,
+                            AgentBudgetService budgetService,
+                            NoteBatchBuilder noteBatchBuilder) {
         this.deepSeekUtils = deepSeekUtils;
         this.longVideoContextService = longVideoContextService;
         this.checkpointService = checkpointService;
@@ -47,6 +68,7 @@ public class AgentLoopService {
         this.evidenceVerificationService = evidenceVerificationService;
         this.taskEventService = taskEventService;
         this.budgetService = budgetService;
+        this.noteBatchBuilder = noteBatchBuilder;
         AgentBudgetEstimator.Settings settings = budgetService.settings();
         this.maxRounds = settings.maxRounds();
         this.maxEstimatedCost = budgetService.maxEstimatedCost();
@@ -98,6 +120,9 @@ public class AgentLoopService {
     private AgentState runWithinBudget(Long mediaId, VideoContext context, ModeProfile profile,
                                        AgentBudgetEstimator.Estimate budget) {
         long runStartedNanos = System.nanoTime();
+        if (isDefaultNote(mediaId, context)) {
+            return runBatchedDefaultNote(mediaId, context, profile, budget, runStartedNanos);
+        }
         AgentState savedState = mediaId == null ? null
                 : checkpointService.loadCriticState(mediaId, context.userGoal(), modeOf(profile));
         boolean terminalCheckpoint = savedState != null && savedState.result() != null
@@ -160,6 +185,216 @@ public class AgentLoopService {
         validateResult(state.result(), profile);
         if (mediaId != null) checkpointService.saveResult(mediaId, state, modeOf(profile));
         return state;
+    }
+
+    /**
+     * 默认笔记使用完整 Context 的动态批次；交互式目标继续走原有兼容链路。
+     * 批次结果先独立落盘，聚合和 Critic 重试只读取/刷新必要批次。
+     */
+    private AgentState runBatchedDefaultNote(Long mediaId,
+                                              VideoContext context,
+                                              ModeProfile profile,
+                                              AgentBudgetEstimator.Estimate budget,
+                                              long runStartedNanos) {
+        AnalysisMode mode = modeOf(profile);
+        AgentState savedState = checkpointService.loadCriticState(mediaId, context.userGoal(), mode);
+        boolean terminal = savedState != null && savedState.result() != null
+                && savedState.critique() != null
+                && (savedState.round() >= maxRounds || savedState.critique().passed());
+        if (terminal && isResultValid(savedState.result(), profile)
+                && chaptersValid(context, savedState.result())) {
+            checkpointService.saveResult(mediaId, savedState, mode);
+            telemetry.incrementCurrent("terminalCheckpointHits", 1);
+            return savedState;
+        }
+
+        List<NoteInputBatch> batches = checkpointService.loadNoteBatchPlan(mediaId, VideoNoteProfile.VERSION);
+        if (batches == null || batches.isEmpty()) {
+            batches = noteBatchBuilder.plan(mediaId, VideoNoteProfile.VERSION, context);
+            if (batches.isEmpty()) throw new IllegalStateException("默认笔记没有可执行的输入批次");
+            checkpointService.saveNoteBatchPlan(mediaId, VideoNoteProfile.VERSION, batches);
+        }
+
+        VideoContext plannerContext = plannerContext(context, batches);
+        AgentState.AgentPlan plan = resolveBatchPlan(mediaId, plannerContext, profile);
+        checkBudget(runStartedNanos, "Planner", budget);
+        publishStage(mediaId, context.userGoal(), mode,
+                "Planner 已完成章节和批次任务拆解", TaskStage.PLAN_COMPLETED);
+
+        List<NoteBatchResult> successful = loadSuccessfulBatches(mediaId, batches);
+        if (savedState == null || savedState.result() == null || savedState.critique() == null) {
+            successful = executeMissingBatches(mediaId, context, batches, successful, plan,
+                    null, profile, runStartedNanos, budget, batches);
+        }
+
+        AnalysisResult aggregate = savedState != null && savedState.result() != null
+                && savedState.critique() == null
+                ? savedState.result()
+                : aggregateOrReuseSingleBatch(mediaId, context, plan, successful, profile,
+                runStartedNanos, budget);
+        int round = savedState == null ? 0 : savedState.round();
+        AgentState state = new AgentState(context.userGoal(), plan, aggregate, null, round);
+        if (mediaId != null) {
+            checkpointService.saveExecutionState(mediaId, state, mode);
+            publishStage(mediaId, context.userGoal(), mode,
+                    "批次结果已汇总，开始 Critic 校验", TaskStage.EXECUTOR_COMPLETED);
+        }
+
+        for (int nextRound = Math.max(1, round + 1); nextRound <= maxRounds; nextRound++) {
+            checkBudget(runStartedNanos, "Note Critic " + nextRound, budget);
+            state = critiqueRound(mediaId, context, plan, state.result(), nextRound, profile);
+            if (state.critique().passed() || nextRound >= maxRounds) break;
+
+            List<NoteInputBatch> retryBatches = batchesForCritique(batches, state.critique());
+            successful = loadSuccessfulBatches(mediaId, batches);
+            successful = executeMissingBatches(mediaId, context, retryBatches, successful, plan,
+                    state.critique(), profile, runStartedNanos, budget, batches);
+            aggregate = aggregateOrReuseSingleBatch(mediaId, context, plan, successful, profile,
+                    runStartedNanos, budget);
+            state = new AgentState(context.userGoal(), plan, aggregate, null, nextRound);
+            checkpointService.saveExecutionState(mediaId, state, mode);
+        }
+        validateResult(state.result(), profile);
+        checkpointService.saveResult(mediaId, state, mode);
+        return state;
+    }
+
+    private List<NoteBatchResult> loadSuccessfulBatches(Long mediaId, List<NoteInputBatch> batches) {
+        return batches.stream()
+                .map(batch -> checkpointService.loadNoteBatchResult(
+                        mediaId, VideoNoteProfile.VERSION, batch.batchId()))
+                .filter(result -> result != null && result.succeeded() && result.result() != null)
+                .sorted(java.util.Comparator.comparingInt(NoteBatchResult::sequenceNo))
+                .toList();
+    }
+
+    private AgentState.AgentPlan resolveBatchPlan(Long mediaId,
+                                                  VideoContext plannerContext,
+                                                  ModeProfile profile) {
+        AgentState.AgentPlan plan = checkpointService.loadNoteBatchPlannerPlan(
+                mediaId, VideoNoteProfile.VERSION);
+        if (plan == null) {
+            plan = deepSeekUtils.plan(plannerContext, planInstruction(profile));
+            if (!isPlanValid(plan)) {
+                plan = deepSeekUtils.repairPlan(plannerContext, plan, planInstruction(profile));
+                telemetry.incrementCurrent("planStructureRepairs", 1);
+            }
+            validatePlan(plan);
+            checkpointService.saveNoteBatchPlannerPlan(mediaId, VideoNoteProfile.VERSION, plan);
+            return plan;
+        }
+        if (!isPlanValid(plan)) {
+            plan = deepSeekUtils.repairPlan(plannerContext, plan, planInstruction(profile));
+            telemetry.incrementCurrent("planStructureRepairs", 1);
+            validatePlan(plan);
+            checkpointService.saveNoteBatchPlannerPlan(mediaId, VideoNoteProfile.VERSION, plan);
+        }
+        return plan;
+    }
+
+    private List<NoteBatchResult> executeMissingBatches(Long mediaId,
+                                                        VideoContext fullContext,
+                                                        List<NoteInputBatch> requested,
+                                                        List<NoteBatchResult> existing,
+                                                        AgentState.AgentPlan plan,
+                                                        AgentState.CriticResult previousCritique,
+                                                        ModeProfile profile,
+                                                        long runStartedNanos,
+                                                        AgentBudgetEstimator.Estimate budget,
+                                                        List<NoteInputBatch> allBatches) {
+        java.util.Set<String> requestedIds = requested.stream().map(NoteInputBatch::batchId)
+                .collect(java.util.stream.Collectors.toSet());
+        java.util.Set<String> successfulIds = existing.stream().map(NoteBatchResult::batchId)
+                .collect(java.util.stream.Collectors.toSet());
+        boolean directedRetry = previousCritique != null;
+        List<NoteBatchResult> results = existing.stream()
+                .filter(result -> !directedRetry || !requestedIds.contains(result.batchId()))
+                .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
+        for (NoteInputBatch batch : allBatches) {
+            if (!requestedIds.contains(batch.batchId())
+                    || (!directedRetry && successfulIds.contains(batch.batchId()))) continue;
+            publishStage(mediaId, fullContext.userGoal(), modeOf(profile),
+                    "Executor 正在处理批次 " + batch.sequenceNo() + "/" + allBatches.size(),
+                    TaskStage.EXECUTOR_STARTED);
+            VideoContext batchContext = batchContext(fullContext, batch);
+            AnalysisResult result = normalizeEvidenceSources(batchContext,
+                    deepSeekUtils.execute(batchContext, plan, previousCritique, executeInstruction(profile)));
+            NoteBatchResult batchResult = new NoteBatchResult(mediaId, VideoNoteProfile.VERSION,
+                    batch.batchId(), batch.sequenceNo(), result, 1, true, "");
+            checkpointService.saveNoteBatchResult(mediaId, VideoNoteProfile.VERSION, batch, batchResult);
+            results.add(batchResult);
+            checkBudget(runStartedNanos, "Executor batch " + batch.sequenceNo(), budget);
+        }
+        if (results.size() != allBatches.size()) {
+            throw new IllegalStateException("默认笔记批次未全部成功，已完成=" + results.size()
+                    + ", 总数=" + allBatches.size());
+        }
+        return results.stream().sorted(java.util.Comparator.comparingInt(NoteBatchResult::sequenceNo)).toList();
+    }
+
+    private AnalysisResult aggregate(Long mediaId,
+                                     VideoContext context,
+                                     AgentState.AgentPlan plan,
+                                     List<NoteBatchResult> results,
+                                     ModeProfile profile,
+                                     long runStartedNanos,
+                                     AgentBudgetEstimator.Estimate budget) {
+        publishStage(mediaId, context.userGoal(), modeOf(profile),
+                "Aggregator 正在汇总全部批次结果", TaskStage.EXECUTOR_COMPLETED);
+        AnalysisResult result = normalizeEvidenceSources(context,
+                deepSeekUtils.aggregate(context, plan, results, executeInstruction(profile)));
+        checkBudget(runStartedNanos, "Aggregator", budget);
+        return result;
+    }
+
+    /** 单批次无需再发起一次汇总模型调用；多批次仍由 Aggregator 负责跨批次去重与串联。 */
+    private AnalysisResult aggregateOrReuseSingleBatch(Long mediaId,
+                                                       VideoContext context,
+                                                       AgentState.AgentPlan plan,
+                                                       List<NoteBatchResult> results,
+                                                       ModeProfile profile,
+                                                       long runStartedNanos,
+                                                       AgentBudgetEstimator.Estimate budget) {
+        if (results.size() == 1 && results.get(0).result() != null) {
+            return results.get(0).result();
+        }
+        return aggregate(mediaId, context, plan, results, profile, runStartedNanos, budget);
+    }
+
+    private List<NoteInputBatch> batchesForCritique(List<NoteInputBatch> batches,
+                                                     AgentState.CriticResult critique) {
+        List<Long> timestamps = safeList(critique.requiredTimestamps());
+        if (timestamps.isEmpty()) return batches;
+        List<NoteInputBatch> targeted = batches.stream()
+                .filter(batch -> timestamps.stream().anyMatch(ts -> ts >= batch.startMs() && ts < batch.endMs()))
+                .toList();
+        return targeted.isEmpty() ? batches : targeted;
+    }
+
+    private VideoContext plannerContext(VideoContext source, List<NoteInputBatch> batches) {
+        List<VideoContext.VideoSegment> descriptors = batches.stream()
+                .map(batch -> new VideoContext.VideoSegment(batch.startMs(), batch.endMs(),
+                        "[NOTE_BATCH " + batch.batchId() + "]", List.of(), List.of(),
+                        com.example.server.dto.TranscriptSource.CC, batch.chapterId()))
+                .toList();
+        return new VideoContext(source.source(), source.userGoal(), descriptors,
+                source.durationMs(), source.analysisVersion(), source.chapters());
+    }
+
+    private VideoContext batchContext(VideoContext source, NoteInputBatch batch) {
+        List<VideoContext.VideoSegment> segments = batch.segments().stream()
+                .map(part -> new VideoContext.VideoSegment(part.startMs(), part.endMs(), part.transcript(),
+                        part.ocrTexts(), part.evidenceFrames(), part.source(), part.chapterId()))
+                .toList();
+        List<com.example.server.dto.VideoChapter> chapters = source.chapters().stream()
+                .filter(chapter -> batch.chapterId() != null && batch.chapterId().equals(chapter.id()))
+                .toList();
+        return new VideoContext(source.source(), source.userGoal(), segments,
+                source.durationMs(), source.analysisVersion(), chapters);
+    }
+
+    private boolean isDefaultNote(Long mediaId, VideoContext context) {
+        return mediaId != null && context != null && VideoNoteProfile.GOAL.equals(context.userGoal());
     }
 
     private AgentState.AgentPlan resolvePlan(Long mediaId,

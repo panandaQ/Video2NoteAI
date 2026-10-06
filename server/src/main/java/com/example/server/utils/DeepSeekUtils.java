@@ -7,6 +7,7 @@ import com.example.server.dto.ChunkCleanResult;
 import com.example.server.dto.ModeClassification;
 import com.example.server.dto.VideoChunk;
 import com.example.server.dto.VideoContext;
+import com.example.server.dto.NoteBatchResult;
 import com.example.server.dto.VideoRetrievalIntent;
 import com.example.server.dto.knowledge.EvidencePromptLine;
 import com.example.server.dto.knowledge.GroundedAnswerResult;
@@ -36,6 +37,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -119,15 +121,17 @@ public class DeepSeekUtils {
     public AgentState.AgentPlan plan(VideoContext context, String modeInstruction) {
         try {
             String prompt = """
-                    你是 Video Agent 的 Planner。理解用户目标，并拆成 1 到 5 个可执行任务。
-                    任务必须能够仅依靠 VideoContext 中的 ASR、OCR 和时间戳证据完成。
-                    任务按执行顺序排列，每项只描述一个可验证的分析动作。
+                    你是 Video2NoteAI 的 Planner。请理解用户目标，并给出一份简洁、可执行的分析计划。
+                    计划服务于后续 Executor：只需要覆盖主要内容主线、核心知识点和用户明确要求，
+                    不要把任务拆得过细，也不要在 Planner 阶段生成笔记正文。
+                    任务按执行顺序排列，每项描述一个清晰的分析动作；最多 5 项，允许少于 5 项。
+                    计划应以当前 VideoContext 为依据，不能引入上下文之外的事实。
                     只返回 JSON：
                     {
                       "understoodGoal": "对用户目标的明确理解",
                       "tasks": ["任务1", "任务2", "任务3"]
                     }
-                    VideoContext:
+                    VideoContext（可能是批次目录，完整证据由 Executor 读取）:
                     """ + objectMapper.writeValueAsString(context)
                     + modeSuffix("本次分析模式的额外拆解要求：", modeInstruction);
             return structuredChat("PLANNER", prompt, AgentState.AgentPlan.class);
@@ -148,9 +152,9 @@ public class DeepSeekUtils {
                                        String modeInstruction) {
         try {
             String prompt = """
-                    你是 Video Agent 的 Planner。Critic 发现当前计划遗漏了用户要求，请修订计划。
-                    保留仍然有效的任务，只补充或调整遗漏部分，最终保持 1 到 5 个有序、可验证的任务。
-                    任务必须能够仅依靠 VideoContext 中的 ASR、OCR 和时间戳证据完成。
+                    你是 Video2NoteAI 的 Planner。Critic 发现当前计划存在遗漏，请做最小幅度修订。
+                    保留已经有效的任务，只补充或调整确实缺失的部分；最终计划最多 5 项，按执行顺序排列。
+                    不要重写整份计划，也不要生成笔记正文或补充上下文之外的事实。
                     只返回 JSON：
                     {
                       "understoodGoal": "修订后对用户目标的明确理解",
@@ -181,8 +185,8 @@ public class DeepSeekUtils {
                                            String modeInstruction) {
         try {
             String prompt = """
-                    你是 Video Agent 的 Planner。上一份计划 JSON 可以解析，但业务结构不完整。
-                    请补全目标理解，并输出 1 到 5 个非空、按顺序执行、可由当前 VideoContext 验证的任务。
+                    你是 Video2NoteAI 的 Planner。上一份计划结构不完整，请在不扩展用户目标的前提下修复它。
+                    输出 1 到 5 个非空、按顺序执行、能够基于当前 VideoContext 完成的任务。
                     只返回 JSON：
                     {
                       "understoodGoal": "对用户目标的明确理解",
@@ -226,12 +230,16 @@ public class DeepSeekUtils {
                        同时仅对高置信的同音/形近错字做纠正。没有历史可参考时逐字保留原问题。
                     2. semanticQuery：面向向量检索，必须比 standaloneQuery 更具体：把被问对象、限定条件、领域词
                        都写全（例如把"新模型"写成"新提出的序列转录模型 对比循环网络与卷积网络方案"）。
-                       使用纠正后的术语，但含义不得偏离原问题。
+                       使用纠正后的术语，但含义不得偏离原问题；必须保留 standaloneQuery 中的专有名词、
+                       书名/论文名、人物、地点、数字、单位、英文缩写和带引号的短语，不得泛化成“某本书”
+                       “某个故事”或“某种方法”。
                     3. originalTerms：从用户问题中提取的原始术语（含可能的错字），原样保留，不得改写。
                     4. correctedTerms：只放上下文能明确判断的纠正术语；不能确定时返回空数组。
                     5. corrections：逐条记录 raw（原词）→ corrected（候选词）→ reason（基于上下文的简短理由）；
                        只记录高置信纠正，无法确定的不要记录。
-                    6. keywords：保留人物、概念、事件和专有名词。
+                    6. keywords：保留人物、概念、事件和专有名词；把问题中的数字、单位、英文缩写、作品名、
+                       人名和地点作为独立关键词全部保留。追问中的限定词（例如“通宵”“进修期间”“谁借给他”）
+                       也必须保留，不能只输出“读书”“故事”等泛词。
                     7. visualKeywords：只保留可能出现在字幕、PPT、代码或画面文字中的词；没有则返回空数组。
 
                     检索会同时使用 originalTerms 与 correctedTerms 两路，因此纠正表达不能替代或丢失原始表达。
@@ -474,8 +482,9 @@ public class DeepSeekUtils {
                                   String modeInstruction) {
         try {
             String prompt = """
-                    你是 Video Agent 的 Executor。按照计划分析 VideoContext 并生成结构化视频笔记。
-                    逐项执行 Plan 中的任务，最终产物必须覆盖全部任务。
+                    你是 Video2NoteAI 的 Executor。按照 Plan 分析当前 VideoContext，生成有重点、可核验的结构化视频笔记。
+                    逐项完成计划任务，但不要为了覆盖任务而堆砌重复或空泛表述；优先保留真正重要的内容主线、
+                    核心概念、关键事实和因果关系。
 
                     字幕可能包含同音字、近音字、断句错误或专有名词转写错误。可以结合章节标题、相邻字幕和
                     OCR 理解明显错误，但必须遵守：
@@ -484,10 +493,11 @@ public class DeepSeekUtils {
                     - 无法确定的表达必须保留不确定性；
                     - 不得使用视频上下文之外的事实。
 
-                    conclusions 中的每条结论都必须至少绑定一条真实证据，并避免重复和空泛表述。
-                    evidence.claim 必须原样复制它所支持的 conclusion，timestampMs 必须落在提供的原始片段范围内。
+                    conclusions 中的重要结论应绑定真实证据；evidence.claim 必须原样复制它所支持的 conclusion，
+                    timestampMs 必须落在提供的原始片段范围内。
+                    证据不足时减少结论或明确保留不确定性，不要为了凑数量编造内容。
                     不要因为 OCR 中重复出现标题、页眉或水印而重复生成要点。
-                    suggestions 只填写基于视频内容的复习重点、可继续思考的问题或待核验内容。
+                    suggestions 只填写基于视频内容的复习重点、可继续思考的问题或待核验内容，避免泛泛而谈。
                     如果存在 Critic 反馈，只修正被指出的问题，并保留已经核验通过的结论和证据。
 
                     只返回 JSON：
@@ -513,6 +523,44 @@ public class DeepSeekUtils {
             return structuredChat("EXECUTOR", prompt, AnalysisResult.class);
         } catch (Exception e) {
             throw new IllegalStateException("Agent 执行失败", e);
+        }
+    }
+
+    /**
+     * 汇总动态批次的结构化产物。这里只发送批次结果和目录元数据，不把完整原始 Context
+     * 再次拼进一个超过模型窗口的 Prompt；原始证据仍由批次 Executor 绑定并由 Critic 校验。
+     */
+    public AnalysisResult aggregate(VideoContext context,
+                                    AgentState.AgentPlan plan,
+                                    List<NoteBatchResult> batchResults,
+                                    String modeInstruction) {
+        try {
+            String prompt = """
+                    你是 Video Agent 的 Aggregator。请按 sequenceNo 顺序汇总所有成功的批次产物，生成一份结构化视频笔记。
+                    只能使用批次结果中的事实、结论和证据；不得补写批次结果之外的常识或事实。
+                    合并重复结论，保留能覆盖完整视频的关键信息，并保留 evidence 的时间戳、来源、原文和 claim 绑定。
+                    如果某一章节没有有效批次结果，必须在对应 sections 中明确写“未提取到可核验证据”。
+                    只返回 JSON：
+                    {
+                      "title": "产物标题",
+                      "conclusions": ["结论"],
+                      "evidence": [{"timestampMs": 120000, "source": "CC", "content": "原始证据", "claim": "结论"}],
+                      "suggestions": ["建议"],
+                      "sections": [{"key": "chapter:id", "title": "章节标题", "items": ["要点"]}]
+                    }
+
+                    Planner:
+                    """ + objectMapper.writeValueAsString(plan) + """
+
+                    Chapter directory:
+                    """ + objectMapper.writeValueAsString(context == null ? List.of() : context.chapters()) + """
+
+                    Successful batch results (sequenceNo order is authoritative):
+                    """ + objectMapper.writeValueAsString(batchResults == null ? List.of() : batchResults)
+                    + modeSuffix("本次分析模式的额外汇总要求：", modeInstruction);
+            return structuredChat("AGGREGATOR", prompt, AnalysisResult.class);
+        } catch (Exception e) {
+            throw new IllegalStateException("Agent 批次汇总失败", e);
         }
     }
 
@@ -552,18 +600,21 @@ public class DeepSeekUtils {
                                             String modeInstruction) {
         try {
             String prompt = """
-                    你是 Video Agent 的 Critic，只负责检查，不负责改写产物。
+                    你是 Video2NoteAI 的 Critic，只负责检查，不负责改写产物。
+                    目标是判断当前笔记是否已经可以交付；只有存在实质性缺陷时才判定不通过，
+                    不要因为措辞偏好或可选扩展而要求重跑。
                     检查标准：
                     1. 是否覆盖用户目标和 Planner 的全部任务；
-                    2. conclusions 中的每条结论是否都有 evidence.claim 的明确绑定；
+                    2. 重要 conclusions 是否都有 evidence.claim 的明确绑定；
                     3. 每条绑定证据的时间戳、来源（ASR/OCR/CC 及其组合）和原文是否能在 VideoContext 中核验；
                     4. 是否存在上下文不支持的结论；
                     5. title、conclusions、evidence、suggestions 是否完整；
                     6. VideoContext 存在平台章节时，sections 必须按原顺序每章一个 chapter:{id} 段落，
                        章内结论引用的证据时间戳必须落在该章范围内，无证据章节必须明确写"未提取到可核验证据"。
+                    7. 是否存在明显重复、标题/水印造成的伪知识点，或由局部证据过度推导出的结论。
 
                     只有全部满足时 passed 才能为 true。
-                    feedback 只填写能够基于当前 VideoContext 直接重写的修改动作。
+                    feedback 只填写能够基于当前 VideoContext 直接修复的具体动作。
                     missingRequirements 填写未覆盖的用户目标或 Planner 任务。
                     unsupportedClaims 填写当前 VideoContext 无法支持、需要重新检索证据的结论。
                     requiredTimestamps 只填写需要定向加载原始证据的时间戳；无需补充证据时返回空数组。
@@ -734,15 +785,19 @@ public class DeepSeekUtils {
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof RuntimeException runtimeException) throw runtimeException;
+            if (cause instanceof IOException ioException) {
+                throw new RetriableException("模型响应读取失败", ioException);
+            }
             throw new IllegalStateException("模型调用失败", cause);
         }
     }
 
-    private boolean isRetriableModelFailure(Throwable error) {
+    static boolean isRetriableModelFailure(Throwable error) {
         Throwable current = error;
         for (int depth = 0; current != null && depth < MAX_CAUSE_DEPTH; depth++) {
             if (current instanceof NonRetriableException) return false;
             if (current instanceof RetriableException) return true;
+            if (current instanceof IOException) return true;
             if (current instanceof HttpException httpException) {
                 int status = httpException.statusCode();
                 return status == 408 || status == 429 || status >= 500;

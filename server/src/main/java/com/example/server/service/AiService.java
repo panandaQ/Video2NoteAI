@@ -108,6 +108,9 @@ public class AiService {
             }
 
             VideoContext videoContext = resolveContext(mediaFile, userGoal, traceId, resolvedMode);
+            // 索引是笔记和问答共用的确定性产物：上下文落盘后立即异步启动，
+            // 与 Planner/Executor/Critic 并行；完成回调会再次确认索引已就绪。
+            mediaIndexService.ensureIndexedAsync(mediaId, videoContext);
             mediaFile.setTranscriptText(videoContext.transcriptText());
             currentStage = TaskStage.AGENT_LOOP;
             taskEventService.publishAnalysis(mediaId, userGoal, resolvedMode,

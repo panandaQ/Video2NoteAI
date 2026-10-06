@@ -52,8 +52,10 @@ public class BilibiliCredentialService {
             credential.setCookieEncrypted(encrypted);
             credentialMapper.insert(credential);
         } else {
-            existing.setCookieEncrypted(encrypted);
-            credentialMapper.updateById(existing);
+            int affectedRows = credentialMapper.updateCookie(userId, encrypted);
+            if (affectedRows != 1) {
+                throw new IllegalStateException("Bilibili Cookie 更新失败");
+            }
         }
         log.info("bilibili_cookie_saved userId={}", userId);
     }

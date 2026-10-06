@@ -6,6 +6,8 @@ import com.example.server.dto.AnalysisMode;
 import com.example.server.dto.TaskStage;
 import com.example.server.dto.VideoChunk;
 import com.example.server.dto.VideoContext;
+import com.example.server.dto.NoteBatchResult;
+import com.example.server.dto.NoteInputBatch;
 import com.example.server.repository.AgentCheckpointRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -151,6 +153,82 @@ public class AgentCheckpointService {
     public void saveChunks(Long mediaId, List<VideoChunk> chunks) {
         checkpointRepository.write(mediaId, mediaCheckpointV2("chunks"), mediaCheckpoint("stage"),
                 checkpointKey(mediaId), "chunks", TaskStage.CHUNKS_COMPLETED, List.copyOf(chunks));
+    }
+
+    /** 默认笔记的动态批次计划，原文仍由 Context Checkpoint 提供，不写入 MQ。 */
+    public List<NoteInputBatch> loadNoteBatchPlan(Long mediaId, String profileVersion) {
+        return checkpointRepository.read(mediaId, noteBatchPlanCheckpoint(profileVersion),
+                noteBatchPlanRedisKey(mediaId, profileVersion), "plan",
+                new TypeReference<List<NoteInputBatch>>() { });
+    }
+
+    public void saveNoteBatchPlan(Long mediaId, String profileVersion, List<NoteInputBatch> batches) {
+        String key = noteBatchPlanRedisKey(mediaId, profileVersion);
+        checkpointRepository.writeStandalone(mediaId, noteBatchPlanCheckpoint(profileVersion),
+                key, "plan", TaskStage.PLAN_COMPLETED,
+                List.copyOf(batches));
+        rememberGoalKey(mediaId, key);
+    }
+
+    /** 批次目录专用 Planner 结果；不复用迁移前的全量 Planner Checkpoint。 */
+    public AgentState.AgentPlan loadNoteBatchPlannerPlan(Long mediaId, String profileVersion) {
+        return checkpointRepository.read(mediaId, noteBatchPlannerCheckpoint(profileVersion),
+                noteBatchPlannerRedisKey(mediaId, profileVersion), "plan", AgentState.AgentPlan.class);
+    }
+
+    public void saveNoteBatchPlannerPlan(Long mediaId,
+                                         String profileVersion,
+                                         AgentState.AgentPlan plan) {
+        String key = noteBatchPlannerRedisKey(mediaId, profileVersion);
+        checkpointRepository.writeStandalone(mediaId, noteBatchPlannerCheckpoint(profileVersion),
+                key, "plan", TaskStage.PLAN_COMPLETED, plan);
+        rememberGoalKey(mediaId, key);
+    }
+
+    /** 按稳定幂等键读取单批结果；成功批次命中后不会再次调用模型。 */
+    public NoteBatchResult loadNoteBatchResult(Long mediaId, String profileVersion, String batchId) {
+        return checkpointRepository.read(mediaId, noteBatchCheckpoint(profileVersion, batchId),
+                noteBatchRedisKey(mediaId, profileVersion, batchId), "result", NoteBatchResult.class);
+    }
+
+    /** 先落单批结果，再由编排器推进聚合/Critic，保证批次恢复不重跑已成功批次。 */
+    public void saveNoteBatchResult(Long mediaId,
+                                    String profileVersion,
+                                    NoteInputBatch batch,
+                                    NoteBatchResult result) {
+        if (!mediaId.equals(result.mediaId()) || !profileVersion.equals(result.profileVersion())
+                || !batch.batchId().equals(result.batchId())) {
+            throw new IllegalArgumentException("note batch result identity mismatch");
+        }
+        checkpointRepository.writeStandalone(mediaId,
+                noteBatchCheckpoint(profileVersion, batch.batchId()),
+                noteBatchRedisKey(mediaId, profileVersion, batch.batchId()),
+                "result", TaskStage.EXECUTOR_COMPLETED, result);
+        rememberGoalKey(mediaId, noteBatchRedisKey(mediaId, profileVersion, batch.batchId()));
+    }
+
+    private String noteBatchPlanCheckpoint(String profileVersion) {
+        return "note:batch-plan:" + profileVersion;
+    }
+
+    private String noteBatchPlanRedisKey(Long mediaId, String profileVersion) {
+        return checkpointKey(mediaId) + ":note:batch-plan:" + profileVersion;
+    }
+
+    private String noteBatchPlannerCheckpoint(String profileVersion) {
+        return "note:batch-planner:" + profileVersion;
+    }
+
+    private String noteBatchPlannerRedisKey(Long mediaId, String profileVersion) {
+        return checkpointKey(mediaId) + ":note:batch-planner:" + profileVersion;
+    }
+
+    private String noteBatchCheckpoint(String profileVersion, String batchId) {
+        return "note:batch:" + profileVersion + ":" + batchId;
+    }
+
+    private String noteBatchRedisKey(Long mediaId, String profileVersion, String batchId) {
+        return checkpointKey(mediaId) + ":note:batch:" + profileVersion + ":" + batchId;
     }
 
     public void saveResult(Long mediaId, AgentState state) {
