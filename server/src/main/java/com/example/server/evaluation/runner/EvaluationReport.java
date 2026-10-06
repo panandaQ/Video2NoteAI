@@ -1,6 +1,8 @@
 package com.example.server.evaluation.runner;
 
+import com.example.server.dto.RetrievalScoreBreakdown;
 import com.example.server.dto.knowledge.AnswerOptions;
+import com.example.server.dto.knowledge.QueryPlan;
 
 import java.time.Instant;
 import java.util.List;
@@ -68,7 +70,8 @@ public record EvaluationReport(
             String errorCode,
             String errorMessage,
             int rawCitationCount,
-            int fabricatedCitationCount
+            int fabricatedCitationCount,
+            QueryPlan queryPlan
     ) { }
 
     public record EvidenceResult(
@@ -76,8 +79,16 @@ public record EvaluationReport(
             long startMs,
             long endMs,
             String source,
-            String snippet
-    ) { }
+            String snippet,
+            Double score,
+            String chunkRef,
+            RetrievalScoreBreakdown scoreBreakdown
+    ) {
+        public EvidenceResult(int rank, long startMs, long endMs,
+                              String source, String snippet) {
+            this(rank, startMs, endMs, source, snippet, null, "", null);
+        }
+    }
 
     public record SystemMetrics(
             Long durationMs,

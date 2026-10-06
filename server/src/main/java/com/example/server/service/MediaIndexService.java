@@ -5,8 +5,15 @@ import com.example.server.dto.VideoContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * 检索索引的取材与就绪判定（D-069）。
@@ -32,13 +39,34 @@ public class MediaIndexService {
     private final AgentCheckpointService checkpointService;
     private final VideoChunkingService chunkingService;
     private final VideoEvidenceRetrievalService retrievalService;
+    private final MinuteRagIndexService minuteRagIndexService;
+    private final Executor indexExecutor;
+    private final ConcurrentHashMap<Long, CompletableFuture<Boolean>> inFlight = new ConcurrentHashMap<>();
 
     public MediaIndexService(AgentCheckpointService checkpointService,
                              VideoChunkingService chunkingService,
                              VideoEvidenceRetrievalService retrievalService) {
+        this(checkpointService, chunkingService, retrievalService, null, Runnable::run);
+    }
+
+    public MediaIndexService(AgentCheckpointService checkpointService,
+                             VideoChunkingService chunkingService,
+                             VideoEvidenceRetrievalService retrievalService,
+                             MinuteRagIndexService minuteRagIndexService) {
+        this(checkpointService, chunkingService, retrievalService, minuteRagIndexService, Runnable::run);
+    }
+
+    @Autowired
+    public MediaIndexService(AgentCheckpointService checkpointService,
+                             VideoChunkingService chunkingService,
+                             VideoEvidenceRetrievalService retrievalService,
+                             MinuteRagIndexService minuteRagIndexService,
+                             @Qualifier("ragIndexExecutor") Executor indexExecutor) {
         this.checkpointService = checkpointService;
         this.chunkingService = chunkingService;
         this.retrievalService = retrievalService;
+        this.minuteRagIndexService = minuteRagIndexService;
+        this.indexExecutor = indexExecutor;
     }
 
     /** 该媒体是否已有可检索的 V2 分块快照（D-079：版本缺省的旧快照不算"就绪"）。 */
@@ -100,6 +128,58 @@ public class MediaIndexService {
     public void saveAndIndex(Long mediaId, List<VideoChunk> chunks) {
         checkpointService.saveChunks(mediaId, chunks);
         retrievalService.index(mediaId, chunks);
+        buildMinuteIndex(mediaId);
+    }
+
+    /**
+     * 在笔记 Agent 运行期间异步构建索引。每个实例对同一媒体只允许一个在途任务，
+     * 完成回调仍会调用 {@link #ensureIndexed(Long)} 作为最终就绪边界。
+     */
+    public CompletableFuture<Boolean> ensureIndexedAsync(Long mediaId, VideoContext context) {
+        if (mediaId == null || context == null || context.segments().isEmpty()) {
+            return CompletableFuture.completedFuture(false);
+        }
+        if (isIndexed(mediaId)) {
+            return CompletableFuture.completedFuture(true);
+        }
+        CompletableFuture<Boolean> current = inFlight.get(mediaId);
+        if (current != null) {
+            return current;
+        }
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+        CompletableFuture<Boolean> previous = inFlight.putIfAbsent(mediaId, future);
+        if (previous != null) {
+            return previous;
+        }
+        Runnable task = () -> {
+            try {
+                boolean ready = isIndexed(mediaId) || !ensureChunks(mediaId, context).chunks().isEmpty();
+                future.complete(ready);
+            } catch (RuntimeException e) {
+                log.warn("media_index_async_failed mediaId={}", mediaId, e);
+                future.complete(false);
+            } finally {
+                inFlight.remove(mediaId, future);
+            }
+        };
+        try {
+            indexExecutor.execute(task);
+        } catch (RejectedExecutionException e) {
+            inFlight.remove(mediaId, future);
+            future.complete(false);
+            log.warn("media_index_async_rejected mediaId={}", mediaId, e);
+        }
+        return future;
+    }
+
+    private void buildMinuteIndex(Long mediaId) {
+        if (minuteRagIndexService == null) return;
+        try {
+            minuteRagIndexService.index(mediaId);
+        } catch (RuntimeException e) {
+            // The legacy index remains the readiness boundary and rollback path.
+            log.warn("minute_rag_index_deferred mediaId={}", mediaId, e);
+        }
     }
 
     /**
@@ -114,6 +194,16 @@ public class MediaIndexService {
      */
     public boolean ensureIndexed(Long mediaId) {
         try {
+            CompletableFuture<Boolean> pending = inFlight.get(mediaId);
+            if (pending != null) {
+                try {
+                    if (pending.join()) {
+                        return true;
+                    }
+                } catch (CompletionException e) {
+                    log.warn("media_index_async_join_failed mediaId={}", mediaId, e.getCause());
+                }
+            }
             if (isIndexed(mediaId)) {
                 return true;
             }
@@ -121,7 +211,7 @@ public class MediaIndexService {
             if (context == null) {
                 return false;
             }
-            return !ensureChunks(mediaId, context.segments()).chunks().isEmpty();
+            return !ensureChunks(mediaId, context).chunks().isEmpty();
         } catch (RuntimeException e) {
             log.warn("media_index_ensure_failed mediaId={}", mediaId, e);
             return false;

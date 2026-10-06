@@ -1,6 +1,7 @@
 package com.example.server.dto.knowledge;
 
 import com.example.server.entity.KnowledgeTurnEvidence;
+import com.example.server.dto.VideoEvidenceHit;
 
 import java.util.List;
 
@@ -24,13 +25,32 @@ public record AnswerOutcome(
         String answer,
         long durationMs,
         int rawCitationCount,
-        int fabricatedCitationCount
+        int fabricatedCitationCount,
+        QueryPlan queryPlan,
+        List<VideoEvidenceHit> retrievalHits
 ) {
     public AnswerOutcome {
         rewrittenQuery = rewrittenQuery == null ? "" : rewrittenQuery;
         retrievalMode = retrievalMode == null ? "" : retrievalMode;
         evidence = evidence == null ? List.of() : List.copyOf(evidence);
         answer = answer == null ? "" : answer;
+        retrievalHits = retrievalHits == null ? null : List.copyOf(retrievalHits);
+    }
+
+    /** Compatibility constructor for callers that do not expose retrieval diagnostics. */
+    public AnswerOutcome(String rewrittenQuery,
+                         String retrievalMode,
+                         int retrievedCount,
+                         List<KnowledgeTurnEvidence> evidence,
+                         AnswerMode answerMode,
+                         boolean videoEvidenceFound,
+                         String answer,
+                         long durationMs,
+                         int rawCitationCount,
+                         int fabricatedCitationCount) {
+        this(rewrittenQuery, retrievalMode, retrievedCount, evidence, answerMode,
+                videoEvidenceFound, answer, durationMs, rawCitationCount,
+                fabricatedCitationCount, null, null);
     }
 
     public int citedCount() {

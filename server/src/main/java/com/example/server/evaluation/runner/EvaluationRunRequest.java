@@ -13,8 +13,15 @@ public record EvaluationRunRequest(
         String model,
         Map<String, Object> modelParameters,
         List<EvaluationVariant> variants,
-        Long userId
+        Long userId,
+        Integer retrievalTopK
 ) {
+    public EvaluationRunRequest(String runId, String codeCommit, String promptVersion,
+                                String model, Map<String, Object> modelParameters,
+                                List<EvaluationVariant> variants, Long userId) {
+        this(runId, codeCommit, promptVersion, model, modelParameters, variants, userId, 5);
+    }
+
     public EvaluationRunRequest {
         runId = textOr(runId, UUID.randomUUID().toString());
         codeCommit = textOr(codeCommit, "UNKNOWN");
@@ -24,6 +31,7 @@ public record EvaluationRunRequest(
         variants = variants == null || variants.isEmpty()
                 ? List.of(EvaluationVariant.values())
                 : List.copyOf(new LinkedHashSet<>(variants));
+        retrievalTopK = retrievalTopK == null ? 5 : Math.max(1, retrievalTopK);
     }
 
     private static String textOr(String value, String fallback) {

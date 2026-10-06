@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.example.server.dto.VideoChunk;
+import com.example.server.dto.SegmentRetrievalDocument;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -35,6 +36,7 @@ public class QdrantVectorStore {
     private final String denseCollection;
     private final AtomicBoolean collectionReady = new AtomicBoolean();
     private final AtomicBoolean denseCollectionReady = new AtomicBoolean();
+    private final AtomicBoolean segmentCollectionReady = new AtomicBoolean();
     private final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(3, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
@@ -45,7 +47,7 @@ public class QdrantVectorStore {
                              @Value("${vector.qdrant.url:http://localhost:6333}") String baseUrl,
                              @Value("${vector.qdrant.api-key:}") String apiKey,
                              @Value("${vector.qdrant.collection:video_chunks}") String collection,
-                             @Value("${vector.qdrant.dense-collection:video_chunk_dense_bge_m3_v1}") String denseCollection) {
+                             @Value("${vector.qdrant.dense-collection:video_chunk_dense_bge_m3_v2}") String denseCollection) {
         if (!collection.matches("[A-Za-z0-9_-]{1,128}")) {
             throw new IllegalArgumentException("Qdrant collection name is invalid");
         }
@@ -61,7 +63,7 @@ public class QdrantVectorStore {
 
     /** Test and embedded callers may keep the historical constructor while using the versioned default. */
     public QdrantVectorStore(boolean enabled, String baseUrl, String apiKey, String collection) {
-        this(enabled, baseUrl, apiKey, collection, "video_chunk_dense_bge_m3_v1");
+        this(enabled, baseUrl, apiKey, collection, "video_chunk_dense_bge_m3_v2");
     }
 
     public void upsert(Long mediaId, List<VideoChunk> chunks) {
@@ -241,6 +243,90 @@ public class QdrantVectorStore {
         }
     }
 
+    /** Upserts minute-level points into an independent collection. */
+    public void upsertSegmentDense(Long mediaId, List<SegmentRetrievalDocument> documents,
+                                   List<List<Double>> vectors, String targetCollection,
+                                   String indexVersion) {
+        if (!enabled || documents == null || vectors == null) return;
+        List<SegmentRetrievalDocument> selected = new ArrayList<>();
+        List<List<Double>> selectedVectors = new ArrayList<>();
+        for (int i = 0; i < Math.min(documents.size(), vectors.size()); i++) {
+            List<Double> vector = vectors.get(i);
+            if (vector != null && !vector.isEmpty()) {
+                selected.add(documents.get(i));
+                selectedVectors.add(vector);
+            }
+        }
+        if (selected.isEmpty()) return;
+        String collectionName = validateCollection(targetCollection);
+        try {
+            ensureCollection(collectionName, selectedVectors.get(0).size(), segmentCollectionReady);
+            JSONArray points = new JSONArray();
+            for (int i = 0; i < selected.size(); i++) {
+                SegmentRetrievalDocument document = selected.get(i);
+                JSONObject payload = new JSONObject();
+                payload.put("mediaId", mediaId);
+                payload.put("segmentRef", document.segmentRef());
+                payload.put("startMs", document.startMs());
+                payload.put("endMs", document.endMs());
+                payload.put("chapterId", document.chapterId());
+                payload.put("chapterTitle", document.chapterTitle());
+                payload.put("analysisVersion", document.analysisVersion());
+                payload.put("indexVersion", indexVersion);
+                JSONObject point = new JSONObject();
+                point.put("id", segmentPointId(document, indexVersion));
+                point.put("vector", selectedVectors.get(i));
+                point.put("payload", payload);
+                points.add(point);
+            }
+            JSONObject body = new JSONObject();
+            body.put("points", points);
+            execute(request(baseUrl + "/collections/" + collectionName + "/points?wait=true")
+                    .put(RequestBody.create(body.toString(), JSON_MEDIA_TYPE)));
+        } catch (RuntimeException e) {
+            segmentCollectionReady.set(false);
+            throw new IllegalStateException("Qdrant 分钟级向量写入失败", e);
+        }
+    }
+
+    /** Dense lookup with all three authorization/version dimensions in the Qdrant filter. */
+    public List<SegmentVectorHit> searchSegmentDense(Long mediaId, String analysisVersion,
+                                                     String indexVersion, List<Double> queryEmbedding,
+                                                     int limit, String targetCollection) {
+        if (!enabled || queryEmbedding == null || queryEmbedding.isEmpty()) return List.of();
+        String collectionName = validateCollection(targetCollection);
+        try {
+            ensureCollection(collectionName, queryEmbedding.size(), segmentCollectionReady);
+            List<JSONObject> conditions = new ArrayList<>();
+            conditions.add(matchCondition("mediaId", mediaId));
+            if (analysisVersion != null && !analysisVersion.isBlank()) conditions.add(matchCondition("analysisVersion", analysisVersion));
+            if (indexVersion != null && !indexVersion.isBlank()) conditions.add(matchCondition("indexVersion", indexVersion));
+            JSONObject filter = new JSONObject();
+            filter.put("must", conditions);
+            JSONObject body = new JSONObject();
+            body.put("query", queryEmbedding);
+            body.put("filter", filter);
+            body.put("limit", limit);
+            body.put("with_payload", true);
+            String response = execute(request(baseUrl + "/collections/" + collectionName + "/points/query")
+                    .post(RequestBody.create(body.toString(), JSON_MEDIA_TYPE)));
+            JSONArray points = JSON.parseObject(response).getJSONObject("result").getJSONArray("points");
+            if (points == null) return List.of();
+            List<SegmentVectorHit> hits = new ArrayList<>(points.size());
+            for (Object value : points) {
+                JSONObject point = (JSONObject) value;
+                JSONObject payload = point.getJSONObject("payload");
+                if (payload != null) hits.add(new SegmentVectorHit(payload.getString("segmentRef"),
+                        payload.getLongValue("startMs"), payload.getLongValue("endMs"),
+                        point.getDoubleValue("score")));
+            }
+            return hits;
+        } catch (RuntimeException e) {
+            segmentCollectionReady.set(false);
+            throw new IllegalStateException("Qdrant 分钟级语义检索失败", e);
+        }
+    }
+
     private JSONObject matchCondition(String key, Object value) {
         JSONObject match = new JSONObject();
         match.put("value", value);
@@ -269,6 +355,12 @@ public class QdrantVectorStore {
         } catch (RuntimeException e) {
             log.warn("qdrant_media_cleanup_failed mediaId={}", mediaId, e);
         }
+    }
+
+    /** Deletes a versioned/feature-flagged collection without changing legacy cleanup semantics. */
+    public void deleteMedia(Long mediaId, String targetCollection) {
+        if (!enabled || targetCollection == null || targetCollection.isBlank()) return;
+        deleteMediaFromCollection(mediaId, validateCollection(targetCollection));
     }
 
     private void deleteMediaFromCollection(Long mediaId, String targetCollection) {
@@ -353,6 +445,14 @@ public class QdrantVectorStore {
         return UUID.nameUUIDFromBytes(source.getBytes(StandardCharsets.UTF_8)).toString();
     }
 
+    private String segmentPointId(SegmentRetrievalDocument document, String indexVersion) {
+        String source = document.segmentRef() + ":" + document.analysisVersion() + ":" + indexVersion;
+        return UUID.nameUUIDFromBytes(source.getBytes(StandardCharsets.UTF_8)).toString();
+    }
+
     public record VectorHit(long startMs, long endMs, double score) {
+    }
+
+    public record SegmentVectorHit(String segmentRef, long startMs, long endMs, double score) {
     }
 }

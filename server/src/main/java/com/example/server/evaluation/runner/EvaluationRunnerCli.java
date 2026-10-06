@@ -22,7 +22,9 @@ import java.util.UUID;
  *
  * <p>调用形式：
  * {@code EvaluationRunnerCli --config run.json [--dataset golden.json] [--output report.json]}。
- * 配置和报告都是 JSON；失败返回非零退出码，报告通过临时文件原子替换，避免留下半截 JSON。
+ * 配置和报告都是 JSON；失败返回非零退出码。输出路径以 {@code .jsonl} 结尾时，
+ * 评测结果按轮实时追加并 flush 到 JSON Lines 文件，适合长时间运行和中途查看；
+ * 其他后缀继续使用临时文件原子替换的完整 JSON 报告。
  */
 public final class EvaluationRunnerCli {
 
@@ -66,10 +68,16 @@ public final class EvaluationRunnerCli {
             String commit = context.getBean(CodeCommitResolver.class).resolve();
             EvaluationRunRequest request = config.toRunRequest(
                     commit, dataset.provenance().productionAnswerModel());
-            EvaluationReport report = context.getBean(KnowledgeEvaluationRunner.class)
-                    .run(datasetBytes, request);
             Path output = Path.of(config.outputPath()).toAbsolutePath().normalize();
-            writeAtomically(objectMapper, report, output);
+            KnowledgeEvaluationRunner runner = context.getBean(KnowledgeEvaluationRunner.class);
+            if (output.getFileName().toString().toLowerCase(java.util.Locale.ROOT).endsWith(".jsonl")) {
+                try (EvaluationJsonlWriter writer = new EvaluationJsonlWriter(objectMapper, output)) {
+                    runner.runStreaming(datasetBytes, request, writer);
+                }
+            } else {
+                EvaluationReport report = runner.run(datasetBytes, request);
+                writeAtomically(objectMapper, report, output);
+            }
             out.println(output);
             return 0;
         } catch (Exception e) {

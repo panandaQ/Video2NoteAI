@@ -59,7 +59,7 @@ if (-not $JdkHome -or -not (Test-Path (Join-Path $JdkHome 'bin\javac.exe'))) {
     throw "找不到 JDK 21（设置 JAVA_HOME 或用 -JdkHome 指定）"
 }
 $env:JAVA_HOME = $JdkHome
-$env:Path = "$env:JAVA_HOME\bin;$env:Path"
+$env:Path = "${env:JAVA_HOME}\bin;${env:Path}"
 
 Write-Output ("server starting: port={0} db={1} flywayTarget={2}" -f $env:SERVER_PORT, ($env:DB_URL -replace '\?.*$', ''), $(if ($FlywayTarget) { $FlywayTarget } else { 'latest' }))
 $serverDir = Join-Path $repoRoot 'server'

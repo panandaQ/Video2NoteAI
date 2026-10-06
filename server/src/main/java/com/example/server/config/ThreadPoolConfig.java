@@ -2,6 +2,7 @@ package com.example.server.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -30,6 +31,18 @@ public class ThreadPoolConfig {
     @Bean("modelCallExecutor")
     public ThreadPoolTaskExecutor modelCallExecutor() {
         return executor("LLM-Thread-", 4, 8, 20);
+    }
+
+    /**
+     * RAG 索引编排专用线程池。索引构建会触发分块清洗、Embedding 和向量写入，
+     * 不应占用 AI 主链的线程；真正的模型调用仍由 modelCallExecutor 统一限流。
+     */
+    @Bean("ragIndexExecutor")
+    public ThreadPoolTaskExecutor ragIndexExecutor(
+            @Value("${ai.rag.index-concurrency:2}") int concurrency,
+            @Value("${ai.rag.index-queue-capacity:20}") int queueCapacity) {
+        int poolSize = Math.max(1, concurrency);
+        return executor("RAG-INDEX-", poolSize, poolSize, Math.max(1, queueCapacity));
     }
 
     /**

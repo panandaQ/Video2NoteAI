@@ -17,8 +17,17 @@ public record EvaluationRunConfig(
         String codeCommit,
         String promptVersion,
         String model,
-        Map<String, Object> modelParameters
+        Map<String, Object> modelParameters,
+        Integer retrievalTopK
 ) {
+    public EvaluationRunConfig(String datasetPath, String outputPath, Long userId,
+                               List<EvaluationVariant> variants, String runId,
+                               String codeCommit, String promptVersion, String model,
+                               Map<String, Object> modelParameters) {
+        this(datasetPath, outputPath, userId, variants, runId, codeCommit,
+                promptVersion, model, modelParameters, 5);
+    }
+
     public EvaluationRunConfig {
         if (datasetPath == null || datasetPath.isBlank()) {
             throw new IllegalArgumentException("datasetPath is required");
@@ -39,14 +48,16 @@ public record EvaluationRunConfig(
                 firstText(model, datasetModel),
                 modelParameters,
                 variants,
-                userId);
+                userId,
+                retrievalTopK);
     }
 
     public EvaluationRunConfig withPaths(String datasetOverride, String outputOverride) {
         return new EvaluationRunConfig(
                 firstText(datasetOverride, datasetPath),
                 firstText(outputOverride, outputPath),
-                userId, variants, runId, codeCommit, promptVersion, model, modelParameters);
+                userId, variants, runId, codeCommit, promptVersion, model,
+                modelParameters, retrievalTopK);
     }
 
     private static String firstText(String preferred, String fallback) {

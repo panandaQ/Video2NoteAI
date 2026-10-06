@@ -1,0 +1,2600 @@
+{
+  "datasetVersion": "v2-candidate",
+  "createdAt": "2026-09-26",
+  "provenance": {
+    "generatorModel": "claude-fable-5",
+    "generatorPromptVersion": "dataset-build-plan-v2-gen-v1",
+    "judgeModel": "qwen-plus",
+    "judgePromptVersion": "dataset-build-guide-judge-v1",
+    "productionAnswerModel": "deepseek-v4-flash",
+    "retrievalParamsSnapshot": {
+      "maxEvidence": 8,
+      "maxEvidencePerMedia": 3,
+      "historyMaxTurns": 10,
+      "qdrantFilterBatchSize": 128
+    },
+    "datasetSha256": ""
+  },
+  "cases": [
+    {
+      "conversationCaseId": "video-A-wuxia-chain-01",
+      "mediaRef": "sha256:7780b0edcdf062403bc0903a705ab444",
+      "sourceVideoTag": "video-A-wuxia",
+      "sourceDistributionNote": "CC 字幕，武侠文化类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "视频中被称为“真正意义上的现代武侠第一人”的是谁？",
+          "standaloneQuestion": "谁被称为真正意义上的现代武侠第一人？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "真正能够称得上是现代武侠第一人的",
+            "是一个湖南人 姓向名恺然 湖南平江人 笔名平江不肖生"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 236000,
+              "endMs": 240000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "他这一支笔为武侠世界开辟出了哪两条大路？",
+          "standaloneQuestion": "平江不肖生为武侠世界开辟出哪两条大路？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "就此给武侠世界开辟出两条大路",
+            "首先一条是江湖奇侠传的玄幻",
+            "而平江不肖生开辟的另一条线 则是近代侠义英雄传的家国写实"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 240000,
+              "endMs": 300000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "多跳合并追问",
+          "question": "把玄幻这条线发挥到极致的那位作者，他载入史册的作品叫什么？",
+          "standaloneQuestion": "把《江湖奇侠传》玄幻这条线发挥到极致的是哪位作者？他载入史册的作品叫什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "把江湖奇侠传的玄幻发挥到极致的",
+            "此人名为还珠楼主",
+            "载入史册的那部作品叫做蜀山剑侠传"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 300000,
+              "endMs": 360000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "平江不肖生十几岁时东渡日本留学，具体是在哪一年？",
+          "standaloneQuestion": "平江不肖生十几岁时东渡日本留学，具体是在哪一年？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-A-wuxia-chain-02",
+      "mediaRef": "sha256:7780b0edcdf062403bc0903a705ab444",
+      "sourceVideoTag": "video-A-wuxia",
+      "sourceDistributionNote": "CC 字幕，武侠文化类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "在报纸上连载小说《龙虎斗京华》的这位作者，给自己起的笔名是什么？",
+          "standaloneQuestion": "《龙虎斗京华》的作者给自己起的笔名是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "小说的名字叫龙虎斗京华",
+            "陈文统还给自己起了一个笔名叫做梁羽生",
+            "这一笔新派武侠的世界由此开启"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 420000,
+              "endMs": 480000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "他的本名呢？",
+          "standaloneQuestion": "笔名梁羽生的这位作者，本名叫什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "这个叫陈文统的年轻人",
+            "陈文统还给自己起了一个笔名叫做梁羽生"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 420000,
+              "endMs": 480000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "对比或约束追问",
+          "question": "同样是连载武侠小说，梁羽生笔下的作品和昔日旧派武侠相比有什么不同？",
+          "standaloneQuestion": "与昔日旧派武侠相比，梁羽生笔下的武侠小说有什么不同？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "昔日旧派武侠的怪力乱神",
+            "在梁羽生的笔下 依托真实的历史感和丰富的文学性",
+            "武侠小说呈现出全新的格局"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 420000,
+              "endMs": 480000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "话题漂移追问",
+          "question": "顺带一提，真正把功夫推向世界、在《精武门》里踢碎“东亚病夫”牌匾的是谁？",
+          "standaloneQuestion": "真正把功夫推向世界、在《精武门》里饰演陈真并踢碎“东亚病夫”牌匾的是谁？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "将功夫真正推向世界的是李小龙",
+            "到精武门里 陈真一脚踢碎东亚病夫的牌匾"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 720000,
+              "endMs": 780000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-A-wuxia-chain-03",
+      "mediaRef": "sha256:7780b0edcdf062403bc0903a705ab444",
+      "sourceVideoTag": "video-A-wuxia",
+      "sourceDistributionNote": "CC 字幕，武侠文化类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "1982年上映的电影《少林寺》里，饰演小和尚并蝉联五届全国武术全能冠军的是谁？",
+          "standaloneQuestion": "1982年上映的《少林寺》里饰演小和尚、蝉联五届全国武术全能冠军的是谁？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "大陆在1982年上映了少林寺",
+            "眉清目秀的小和尚",
+            "觉远的扮演者是 蝉联五届全国武术全能冠军的李连杰"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 840000,
+              "endMs": 882000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "否定纠错追问",
+          "question": "有人说功夫喜剧《蛇形刁手》《醉拳》是李小龙开创的，这种说法对吗？",
+          "standaloneQuestion": "功夫喜剧代表作《蛇形刁手》《醉拳》是哪位演员开创的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "从蛇形刁手醉拳 一种全新的电影风格 功夫喜剧就此诞生",
+            "让成龙这个名字响彻世界"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 780000,
+              "endMs": 840000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "指代追问",
+          "question": "这位戏班出身的龙虎武师，凭借什么让这个名字响彻世界？",
+          "standaloneQuestion": "成龙凭借什么让他的名字响彻世界？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "这个人凭借着不要命的一次次不可能的拍摄",
+            "让成龙这个名字响彻世界"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 780000,
+              "endMs": 840000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "多跳合并追问",
+          "question": "让武侠在国际世界巅峰回响的那位“圈外人”导演，拍的电影叫什么？",
+          "standaloneQuestion": "让武侠在国际世界巅峰回响的那位圈外人导演是谁？他执导的电影叫什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "让武侠在国际世界巅峰回响的 则是一个圈外人",
+            "李安的那一部卧虎藏龙"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 840000,
+              "endMs": 882000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-B-transformer-paper-chain-01",
+      "mediaRef": "sha256:71fc6799ebe095119f95b23fee72f4f7",
+      "sourceVideoTag": "video-B-transformer-paper",
+      "sourceDistributionNote": "CC 字幕，AI 论文精读类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "Transformer 这篇论文的标题是什么？",
+          "standaloneQuestion": "Transformer 这篇论文的标题是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "标题是说Attention Is All You Need"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 0,
+              "endMs": 60000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "一共有几个作者？",
+          "standaloneQuestion": "Transformer 这篇论文一共有几个作者？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "这里面有八个作者"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 60000,
+              "endMs": 120000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "指代追问",
+          "question": "其中不在 Google 的有几个？",
+          "standaloneQuestion": "Transformer 论文的八个作者当中，不在 Google 工作的有几个？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "作者绝大部分都是在google",
+            "然后有两个作者当中不在google"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 60000,
+              "endMs": 120000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "那这篇文章具体是哪一天投稿的？",
+          "standaloneQuestion": "Attention Is All You Need 这篇论文具体是哪一天投稿到 arXiv 的？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-B-transformer-paper-chain-02",
+      "mediaRef": "sha256:71fc6799ebe095119f95b23fee72f4f7",
+      "sourceVideoTag": "video-B-transformer-paper",
+      "sourceDistributionNote": "CC 字幕，AI 论文精读类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "论文摘要中说，Transformer 在英语到德语的翻译任务上达到了多少 BLEU 分数？",
+          "standaloneQuestion": "论文摘要中说，Transformer 在英语到德语的翻译任务上达到了多少 BLEU 分数？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "他说我的模型达到了28.4的BLEU",
+            "我这个是在英语到德语的一个翻译工作"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 360000,
+              "endMs": 420000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "那它在英语到法语的翻译任务上做得怎么样？",
+          "standaloneQuestion": "Transformer 在英语到法语的翻译任务上做得怎么样？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "在一个英语到法语的翻译的任务上面啊",
+            "他们做了一个单模型",
+            "比所有的模型都要效果要好"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 360000,
+              "endMs": 420000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "这个模型在多少个 GPU 上训练了多长时间？",
+          "standaloneQuestion": "Transformer 这个模型在多少个 GPU 上训练了多长时间？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "然后它只在八个GPU上训练了3.5天"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 420000,
+              "endMs": 480000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "对比或约束追问",
+          "question": "它比当时英语到德语翻译任务上最好的结果，在 BLEU 分数上好了多少？",
+          "standaloneQuestion": "Transformer 比当时英语到德语翻译任务上最好的结果，在 BLEU 分数上好了多少？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "它说我们比目前的最好的结果 好了两个BLEU"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 360000,
+              "endMs": 420000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-B-transformer-paper-chain-03",
+      "mediaRef": "sha256:71fc6799ebe095119f95b23fee72f4f7",
+      "sourceVideoTag": "video-B-transformer-paper",
+      "sourceDistributionNote": "CC 字幕，AI 论文精读类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "论文结论里说，Transformer 把之前所有的循环层全部换成了什么？",
+          "standaloneQuestion": "论文结论里说，Transformer 把之前所有的循环层全部换成了什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "它把之前所有的循环层啊 全部换成了multi-headed self-attention"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 491000,
+              "endMs": 540000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "这篇文章的代码放在哪个库里面？",
+          "standaloneQuestion": "Transformer 这篇论文的代码放在哪个库里面？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "这篇文章所有代码放在tensor2tensor这个库里面"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 540000,
+              "endMs": 600000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "话题漂移追问",
+          "question": "作者当时还提到想把这种纯注意力机制用在哪些数据上？",
+          "standaloneQuestion": "Transformer 论文结论中，作者想把这种纯基于注意力机制的模型用在文本以外的哪些数据上？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "他觉得可以用在文本以外的数据上啊",
+            "包括了 啊 图片啊",
+            "语音啊",
+            "video啊"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 540000,
+              "endMs": 600000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "否定纠错追问",
+          "question": "这些后续在图片、语音上的工作，是不是都是本文作者自己完成的？",
+          "standaloneQuestion": "Transformer 在图片、语音等数据上的后续应用，是不是都是这篇论文的作者自己完成的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "虽然这些工作基本上都不是由本篇文章 作者完成的",
+            "都是由别人完成的"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 540000,
+              "endMs": 600000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-B-transformer-paper-chain-04",
+      "mediaRef": "sha256:71fc6799ebe095119f95b23fee72f4f7",
+      "sourceVideoTag": "video-B-transformer-paper",
+      "sourceDistributionNote": "CC 字幕，AI 论文精读类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "导言中说，RNN 对第 t 个词计算的隐藏状态 ht 是由什么决定的？",
+          "standaloneQuestion": "Transformer 论文导言中说，RNN 对第 t 个词计算的隐藏状态 ht 是由什么决定的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "对第t个词 它会计算一个输出叫做ht",
+            "它的ht是由前面一个词的隐藏状态 叫ht-1和当前第t个词本身决定的"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 660000,
+              "endMs": 720000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "那如果句子有 100 个词，时序上要走多少步？",
+          "standaloneQuestion": "如果输入的句子有 100 个词，RNN 在时序上要走多少步？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "假设你的句子有100个词的话 那么就是说你得时序地上100步"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 720000,
+              "endMs": 780000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "指代追问",
+          "question": "这种无法并行的计算方式会导致什么问题？",
+          "standaloneQuestion": "RNN 这种一步一步、无法并行的计算方式会导致什么问题？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "导致你的并行度比较低",
+            "使得你在计算上性能比较差"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 720000,
+              "endMs": 780000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "那作者具体引用了哪些改进 RNN 并行度的论文？",
+          "standaloneQuestion": "Transformer 论文导言中，作者具体引用了哪些改进 RNN 并行度的论文标题？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-B-transformer-paper-chain-05",
+      "mediaRef": "sha256:71fc6799ebe095119f95b23fee72f4f7",
+      "sourceVideoTag": "video-B-transformer-paper",
+      "sourceDistributionNote": "CC 字幕，AI 论文精读类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "模型架构一章中，编码器一共用多少个完全一样的层堆叠而成？",
+          "standaloneQuestion": "Transformer 模型架构一章中，编码器一共用多少个完全一样的层堆叠而成？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "从编码器它是用一个n等于六个的一个完全一样的层啊"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1320000,
+              "endMs": 1380000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "每个层里面有几个子层？",
+          "standaloneQuestion": "Transformer 编码器的每个层里面有几个子层？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "他说每个layer里面呢会有两个sub-layers"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1320000,
+              "endMs": 1380000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "指代追问",
+          "question": "第一个子层叫什么？",
+          "standaloneQuestion": "Transformer 编码器每个层的第一个子层叫什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "第一个sub-layer叫做multi-head self-attention"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1380000,
+              "endMs": 1440000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "那这个编码器整体一共包含多少个可训练参数？",
+          "standaloneQuestion": "Transformer 论文中，编码器整体一共包含多少个可训练参数？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-B-transformer-paper-chain-06",
+      "mediaRef": "sha256:71fc6799ebe095119f95b23fee72f4f7",
+      "sourceVideoTag": "video-B-transformer-paper",
+      "sourceDistributionNote": "CC 字幕，AI 论文精读类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "Transformer 里使用的注意力机制叫什么名字？",
+          "standaloneQuestion": "Transformer 里使用的注意力机制叫什么名字？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "他取的名字叫做scaled dot-product attention"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2160000,
+              "endMs": 2220000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "query 和 key 的长度都等于什么？",
+          "standaloneQuestion": "scaled dot-product attention 中，query 和 key 的长度都等于什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "我的query和key 它的长度是等长的 都等于dk"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2160000,
+              "endMs": 2220000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "算出内积之后，还要除以什么？",
+          "standaloneQuestion": "scaled dot-product attention 中，query 和 key 算出内积之后，还要除以什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "然后算出来之后 他再除以根号dk"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2160000,
+              "endMs": 2220000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "那这种点积注意力机制最早是由谁在什么时候提出的？",
+          "standaloneQuestion": "scaled dot-product attention 这种点积注意力机制最早是由谁在什么时候提出的？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-B-transformer-paper-chain-07",
+      "mediaRef": "sha256:71fc6799ebe095119f95b23fee72f4f7",
+      "sourceVideoTag": "video-B-transformer-paper",
+      "sourceDistributionNote": "CC 字幕，AI 论文精读类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "Transformer 的多头注意力机制一共用了多少个头？",
+          "standaloneQuestion": "Transformer 的多头注意力机制一共用了多少个头？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "在实际上来说 他用的h是等于8的",
+            "就是用8个头"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2760000,
+              "endMs": 2820000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "投影之后每个头是多大的维度？",
+          "standaloneQuestion": "Transformer 多头注意力中，每个头投影之后的维度是多少？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "所以除以八之后呢 就是每一次我们把它投影到一个64维 的一个维度"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2820000,
+              "endMs": 2880000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "多跳合并追问",
+          "question": "那在解码器里，mask 具体是怎么保证看不到未来时刻的？",
+          "standaloneQuestion": "Transformer 解码器中，mask 具体是通过什么方式保证在 t 时刻看不到 t 时刻以后的输入的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "对于qt和kt和他之后的计算那些值 我给你换成一个非常大的负数",
+            "比如说负的10的9次方",
+            "那么这一个那么大的负数在 进入soft max做指数的时候 它就会变成零",
+            "所以导致soft max之后出来的这些东西啊 它对应的那些权重都会变成零"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2580000,
+              "endMs": 2640000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "那作者在多头注意力公式里给出的 WO 投影矩阵具体是几乘几的？",
+          "standaloneQuestion": "Transformer 论文多头注意力公式里的 WO 投影矩阵具体是几乘几的？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-B-transformer-paper-chain-08",
+      "mediaRef": "sha256:71fc6799ebe095119f95b23fee72f4f7",
+      "sourceVideoTag": "video-B-transformer-paper",
+      "sourceDistributionNote": "CC 字幕，AI 论文精读类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "实验部分中，英语翻德语任务使用的是哪个数据集？",
+          "standaloneQuestion": "Transformer 论文实验部分中，英语翻德语任务使用的是哪个数据集？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "一个是英语翻德语",
+            "他用的是标准的WMT 2014的数据啊"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 4380000,
+              "endMs": 4440000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "这个数据集里面有多少个句子的对？",
+          "standaloneQuestion": "WMT 2014 这个数据集里面有多少个句子的对？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "它这个里面有4.5万个句子的对"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 4380000,
+              "endMs": 4440000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "指代追问",
+          "question": "它用的字典是多少个 token？",
+          "standaloneQuestion": "Transformer 英语翻德语任务中，用的 byte-pair encoding 字典是多少个 token？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "它这个地方用的是 37000个token的一个字典"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 4380000,
+              "endMs": 4440000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "那他们训练用的 Adam 优化器的 β1 具体设成了多少？",
+          "standaloneQuestion": "Transformer 论文中训练用的 Adam 优化器的 β1 参数具体设成了多少？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-C-data-structure-chain-01",
+      "mediaRef": "sha256:f9a6c7ee9f75fa6dc4f5731846dd59c0",
+      "sourceVideoTag": "video-C-data-structure",
+      "sourceDistributionNote": "CC 字幕，数据结构课程类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "数据结构的三要素包括哪些？",
+          "standaloneQuestion": "数据结构的三要素包括哪三个部分？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "数据结构它的三要素包括逻辑结构",
+            "存储结构和数据运算"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 0,
+              "endMs": 60000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "那四种常考的逻辑结构里，一对一的呢？",
+          "standaloneQuestion": "四种常考的逻辑结构中，一对一关系对应的是哪一种逻辑结构？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "线性结构呢是一对一的关系的"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 0,
+              "endMs": 60000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "对比或约束追问",
+          "question": "那树形结构和图形结构分别是几对几的关系？",
+          "standaloneQuestion": "四种常考的逻辑结构中，树形结构和图形结构分别是一对几、几对几的关系？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "树形结构呢它是一对多的关系",
+            "而图形结构呢它是多对多的关系"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 60000,
+              "endMs": 120000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "视频里讲解逻辑结构时画的树形结构示意图，具体画了几个节点？",
+          "standaloneQuestion": "视频里讲解逻辑结构时画的树形结构示意图，具体画了几个节点？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-C-data-structure-chain-02",
+      "mediaRef": "sha256:f9a6c7ee9f75fa6dc4f5731846dd59c0",
+      "sourceVideoTag": "video-C-data-structure",
+      "sourceDistributionNote": "CC 字幕，数据结构课程类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "算法的五个基本特性分别是什么？",
+          "standaloneQuestion": "算法有哪五个基本特性？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "算法的五个基本特性\n分别是有穷性\n确定性\n可行性\n输入和输出"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 120000,
+              "endMs": 147000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "对比或约束追问",
+          "question": "那算法的复杂度大小规律里，O(1) 常数阶和 O(log n) 相比哪个更小？",
+          "standaloneQuestion": "算法复杂度的大小规律中，O(1) 常数阶和 O(log n) 相比哪个更小？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "O(1)常数阶要小于O(log n)"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 147000,
+              "endMs": 180000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "化简的时候只保留哪一项、忽略什么？",
+          "standaloneQuestion": "根据复杂度化简原则，化简时只保留哪一项，并且要忽略什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "这个原则只保留最高阶项",
+            "我们要忽略常数项"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 180000,
+              "endMs": 240000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "老师讲复杂度时说要背下来的这条大小规律，具体出自哪本教材的哪一页？",
+          "standaloneQuestion": "老师讲复杂度时说要背下来的这条大小规律，具体出自哪本教材的哪一页？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-C-data-structure-chain-03",
+      "mediaRef": "sha256:f9a6c7ee9f75fa6dc4f5731846dd59c0",
+      "sourceVideoTag": "video-C-data-structure",
+      "sourceDistributionNote": "CC 字幕，数据结构课程类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "顺序表的核心特征是什么？",
+          "standaloneQuestion": "顺序表这种存储结构的核心特征有哪些？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "它是逻辑相邻\n物理位置也相连",
+            "它支持随机访问"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 300000,
+              "endMs": 360000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "对比或约束追问",
+          "question": "那链表的插入和删除，主要靠修改什么来实现？",
+          "standaloneQuestion": "链表的插入和删除操作主要靠修改什么来实现？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "那我们再看它的插入和删除\n主要是修改指针"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 420000,
+              "endMs": 480000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "多跳合并追问",
+          "question": "为什么顺序表按位查找是 O(1)，而链表按位查找却是 O(n)？",
+          "standaloneQuestion": "为什么顺序表按位查找的时间复杂度是 O(1)，而链表按位查找是 O(n)？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "按位查找时间复杂度非常的快啊\n它是大O(1)的",
+            "而且它不支持随机访问",
+            "必须要进行遍历\n那他遍历的一个时间复杂度呢就是大O(n)了"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 360000,
+              "endMs": 420000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 420000,
+              "endMs": 480000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "链表在表头插入时，具体需要修改几个指针变量？",
+          "standaloneQuestion": "链表在表头插入时，具体需要修改几个指针变量？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-C-data-structure-chain-04",
+      "mediaRef": "sha256:f9a6c7ee9f75fa6dc4f5731846dd59c0",
+      "sourceVideoTag": "video-C-data-structure",
+      "sourceDistributionNote": "CC 字幕，数据结构课程类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "栈这种数据结构的核心特点是什么？",
+          "standaloneQuestion": "栈这种数据结构的核心特点是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "栈的一个核心特点就是先进后出"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 660000,
+              "endMs": 720000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "那队列对应的特点又是什么，简称叫什么？",
+          "standaloneQuestion": "队列这种数据结构的核心特点是什么，它的英文简称叫什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "所以他是先进先出的\n也叫做FIFO"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 720000,
+              "endMs": 780000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "否定纠错追问",
+          "question": "有人说广度优先搜索是用栈来实现的，这个说法对吗？",
+          "standaloneQuestion": "广度优先搜索 BFS 是用栈来实现的吗？如果不是，它实际是用什么实现的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "广度优先搜索是用队列来写啊",
+            "那BFS呢主要是借助队列来实现"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 780000,
+              "endMs": 840000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 2040000,
+              "endMs": 2100000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "话题漂移追问",
+          "question": "那跳出栈和队列，字符串匹配里的 KMP 算法，它整体的时间复杂度是多少？",
+          "standaloneQuestion": "字符串匹配中 KMP 算法的整体时间复杂度是多少？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "所以整体的复杂度是大O(N+M)"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1020000,
+              "endMs": 1080000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-C-data-structure-chain-05",
+      "mediaRef": "sha256:f9a6c7ee9f75fa6dc4f5731846dd59c0",
+      "sourceVideoTag": "video-C-data-structure",
+      "sourceDistributionNote": "CC 字幕，数据结构课程类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "含有 N 个节点的完全二叉树，它的高度是多少？",
+          "standaloneQuestion": "含有 N 个节点的完全二叉树，它的高度 H 等于多少？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "含有N个节点的完全二叉树\n它的树的高度是H等于log2N加一"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1380000,
+              "endMs": 1440000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "那度为二的节点和叶子节点的数量是什么关系？",
+          "standaloneQuestion": "二叉树中，度为二的节点数量 N2 和叶子节点数量 N0 之间是什么关系？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "那一定会有N0等于N2+1"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1320000,
+              "endMs": 1380000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "多跳合并追问",
+          "question": "满二叉树和完全二叉树是什么关系，哪一种可以用数组来存储？",
+          "standaloneQuestion": "满二叉树和完全二叉树之间是什么包含关系？哪一种可以用数组来存储？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "满二叉树就是一棵特殊的完全二叉树\n也就是说满二叉树也是完全二叉树",
+            "对于一棵完全二叉树\n完全二叉树呢我们可以用数组来存储"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1440000,
+              "endMs": 1500000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 1380000,
+              "endMs": 1440000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "视频里构造哈夫曼树时举的例子，具体用了哪几个权值？",
+          "standaloneQuestion": "视频里构造哈夫曼树时举的例子，具体用了哪几个权值？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-D-transformer-intro-chain-01",
+      "mediaRef": "sha256:423549e2067da42b41fab87bbcac7607",
+      "sourceVideoTag": "video-D-transformer-intro",
+      "sourceDistributionNote": "CC 字幕，AI 科普类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "视频开头，作者用哪句话作为讲翻译问题的例子？",
+          "standaloneQuestion": "视频开头，作者用哪句话作为讲翻译问题的例子？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "货拉拉拉不拉拉布拉多",
+            "短短十个字里有六个拉字"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 0,
+              "endMs": 34000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "它为什么会让计算机觉得很难理解？",
+          "standaloneQuestion": "货拉拉拉不拉拉布拉多这句话，为什么会让计算机觉得很难理解？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "每个拉字在不同的位置都代表不同的意思",
+            "尤其是中间这个拉布拉在中文里"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 34000,
+              "endMs": 60000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "那中间的“拉布拉”这个词，具体能表示哪两种意思？",
+          "standaloneQuestion": "货拉拉拉不拉拉布拉多这句话里，中间的“拉布拉”这个词具体能表示哪两种意思？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "la可以表示拉货",
+            "也可以表示拉扯"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 0,
+              "endMs": 34000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "视频里说的“含拉量达到惊人的6%”，这个6%具体是怎么计算出来的？",
+          "standaloneQuestion": "视频里说的“含拉量达到惊人的6%”，这个6%具体是怎么计算出来的？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-D-transformer-intro-chain-02",
+      "mediaRef": "sha256:423549e2067da42b41fab87bbcac7607",
+      "sourceVideoTag": "video-D-transformer-intro",
+      "sourceDistributionNote": "CC 字幕，AI 科普类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "视频里说，把文本变成数字最简单的方法，举的例子是什么编码？",
+          "standaloneQuestion": "视频里说，把文本变成数字最简单的方法，举的例子是什么编码？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "UNICODE编码"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 60000,
+              "endMs": 74000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "这个方案有什么问题？",
+          "standaloneQuestion": "视频里说用数字编号这种最简单的方法把文本变成数字，这个方案有什么问题？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "编号只是个纯数字",
+            "不能承载任何语义信息"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 60000,
+              "endMs": 74000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "多跳合并追问",
+          "question": "那为了既能数字化又能承载语义，视频提出了什么方法？",
+          "standaloneQuestion": "视频里为了既能数字化又能承载语义，提出了什么方法来表示词？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "将这句话切分成多个词汇 每个词块叫一个token",
+            "这种表示方式就是embedding 也叫向量"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 60000,
+              "endMs": 74000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 120000,
+              "endMs": 180000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "对比或约束追问",
+          "question": "在二维坐标系里，物流平台和网约车这类词，跟货拉拉、拉布拉多相比，位置更靠近谁？",
+          "standaloneQuestion": "在视频讲的二维坐标系里，物流平台和网约车这类词，跟货拉拉、拉布拉多相比，位置更靠近谁？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "货拉拉会落在X轴正方向",
+            "拉布拉多会落在Y轴正方向",
+            "物流平台 网约车这类词在坐标系上会更靠近货拉拉"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 74000,
+              "endMs": 120000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-D-transformer-intro-chain-03",
+      "mediaRef": "sha256:423549e2067da42b41fab87bbcac7607",
+      "sourceVideoTag": "video-D-transformer-intro",
+      "sourceDistributionNote": "CC 字幕，AI 科普类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "视频里说，可以把一句话抽象成一个词块数据库，其中 key 和 value 分别代表什么？",
+          "standaloneQuestion": "视频里说，可以把一句话抽象成一个词块数据库，其中 key 和 value 分别代表什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "key就是词汇本身",
+            "value就是词块背后的含义"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 190000,
+              "endMs": 240000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "那这三个角色里，承担查询角色的 Q 代表的是什么？",
+          "standaloneQuestion": "在注意力机制的 QKV 三个角色里，承担查询角色的 Q 代表的是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "代表的是这个token想关注什么"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 240000,
+              "endMs": 265000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "对比或约束追问",
+          "question": "那 K 和 V 这两个角色又分别代表什么？",
+          "standaloneQuestion": "在 QKV 里，承担键角色的 K 和承担值角色的 V 分别代表什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "承担键角色的叫K 代表的是这个token能提供什么信息",
+            "承担值角色的叫V 代表的是这个token背后的真正含义"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 265000,
+              "endMs": 300000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "视频里提到的三个权重矩阵，各自的具体数值或维度是多少？",
+          "standaloneQuestion": "视频里用来把 token 向量变成三个专门向量的那三个权重矩阵，各自的具体数值或维度是多少？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-D-transformer-intro-chain-04",
+      "mediaRef": "sha256:423549e2067da42b41fab87bbcac7607",
+      "sourceVideoTag": "video-D-transformer-intro",
+      "sourceDistributionNote": "CC 字幕，AI 科普类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "视频里说生成英文时，会先放入一个固定的起始符号，它叫什么？",
+          "standaloneQuestion": "视频里说生成英文时，会先放入一个固定的起始符号，它叫什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "BOS",
+            "它表示英文从这里开始翻译"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 489000,
+              "endMs": 540000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "话题漂移追问",
+          "question": "那在生成第 N 个词时，只依赖前 N 减一个词的结果，这种注意力叫什么？",
+          "standaloneQuestion": "解码器在生成第 N 个词时只依赖前 N 减一个词的结果，这种注意力机制叫什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "预测第N个词时 只依赖前N减一个词的结果",
+            "所以叫带掩码的多头自注意力"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 540000,
+              "endMs": 583000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "否定纠错追问",
+          "question": "有人说，transformer 的翻译任务里编码器和解码器都必须同时存在，这个说法对吗？",
+          "standaloneQuestion": "有人说，transformer 的翻译任务里编码器和解码器都必须同时存在，这个说法对吗？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "并不是所有任务都需要 编码器和解码器同时存在",
+            "如果只需要理解文本 不需要生成 那只用编码器就够了"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 614000,
+              "endMs": 660000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "视频最后遗留的问题“神经网络跟人类大脑有什么关系”，具体是什么关系？",
+          "standaloneQuestion": "视频最后遗留的问题“神经网络跟人类大脑有什么关系”，具体是什么关系？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-E-britain-decline-chain-01",
+      "mediaRef": "sha256:6fb17e7adb3b714efe0f31f2e63a9ae3",
+      "sourceVideoTag": "video-E-britain-decline",
+      "sourceDistributionNote": "CC 字幕，时政评论类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "苏格兰、威尔士、北爱尔兰这三个地方联合起来，是在呼吁什么？",
+          "standaloneQuestion": "苏格兰、威尔士、北爱尔兰这三个地方联合起来，是在呼吁要获得什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "呼吁获得举行独立公投的权利"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 180000,
+              "endMs": 240000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "那他们具体想当哪国人？",
+          "standaloneQuestion": "苏格兰、威尔士、北爱尔兰这三个地方，具体希望自己将来当哪国人？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "我们不想当英国人了",
+            "我们现在啊想当欧盟人"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 180000,
+              "endMs": 240000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "多跳合并追问",
+          "question": "那他们三家各自打算什么时候动手？",
+          "standaloneQuestion": "苏格兰、北爱尔兰、威尔士这三个地方，各自计划在什么时间点举行独立公投？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "5年内我们就会再搞一次独立公投",
+            "表示会在2030年之前举行 爱尔兰的统一公投",
+            "我们那第一届任期内就先不搞独立公投吧"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 420000,
+              "endMs": 480000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "那三家各自公投的确切日期，到底定在哪一天？",
+          "standaloneQuestion": "苏格兰、北爱尔兰、威尔士各自举行独立公投的确切日期，分别定在哪一天？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-E-britain-decline-chain-02",
+      "mediaRef": "sha256:6fb17e7adb3b714efe0f31f2e63a9ae3",
+      "sourceVideoTag": "video-E-britain-decline",
+      "sourceDistributionNote": "CC 字幕，时政评论类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "为什么博主说苏格兰现在理论上不能举行独立公投？",
+          "standaloneQuestion": "博主说苏格兰现在理论上不能举行独立公投，原因是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "苏格兰那次获得的是一次性权利",
+            "用完就寄了",
+            "现在苏格兰是理论上不能公投"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 600000,
+              "endMs": 660000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "那他们凭什么还想着再来一次？",
+          "standaloneQuestion": "苏格兰独立派还想再举行一次独立公投，他们的理由是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "大多数苏格兰选民他们是支持留欧的",
+            "这就让我们当时的投票不具备意义了",
+            "再获得一次公投表决的权利啊"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 660000,
+              "endMs": 720000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "对比或约束追问",
+          "question": "同样是闹独立，为什么北爱尔兰有离开英国的法律支持，苏格兰却没有？",
+          "standaloneQuestion": "同样是分离，为什么北爱尔兰有脱英的法律支持、苏格兰却没有？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "目前呢仅有北爱尔兰具有脱英的实际法律支持",
+            "苏格兰和威尔士没有这个待遇啊",
+            "北爱尔兰有一个1998年的贝尔法斯特协议 以及北爱尔兰法",
+            "当民意多数支持爱尔兰统一的时候 北爱尔兰可以启动公投",
+            "但是苏格兰和威尔士没有对应的机制"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 600000,
+              "endMs": 660000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "否定纠错追问",
+          "question": "照你这么说，苏格兰是不是从来就没有举行过独立公投？",
+          "standaloneQuestion": "苏格兰历史上是不是从来没有举行过独立公投？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "2014年 苏格兰有过一次独立公投啊",
+            "那次是独立失败啊",
+            "多数人投票留在英国吧"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 600000,
+              "endMs": 660000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-F-anthropic-history-chain-01",
+      "mediaRef": "sha256:e7b40d239ff8a035a434a220525aaccf",
+      "sourceVideoTag": "video-F-anthropic-history",
+      "sourceDistributionNote": "CC 字幕，AI 行业史类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "Anthropic 在 2026 年 5 月宣布完成的那笔融资，金额是多少？",
+          "standaloneQuestion": "Anthropic 在 2026 年 5 月宣布完成的那笔融资，金额是多少美元？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "650亿美元的融资"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 60000,
+              "endMs": 120000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "这笔融资落地之后，它的投后估值达到了多少？",
+          "standaloneQuestion": "Anthropic 在完成这笔融资之后，公司的投后估值达到了多少？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "投后估值9650亿"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1080000,
+              "endMs": 1140000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "对比或约束追问",
+          "question": "和 2023 年谷歌那笔投资把估值锚定在 41 亿的时候相比，到这次，估值累计涨了多少倍？",
+          "standaloneQuestion": "Anthropic 的估值从 2023 年谷歌投资锚定的 41 亿，到最后这次融资，累计涨了多少倍？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "4年时间估值翻了200多倍"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1080000,
+              "endMs": 1140000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "话题漂移追问",
+          "question": "顺着融资这条线往下，视频里说它其实是被一个什么样的「联合体」一起托举起来的？",
+          "standaloneQuestion": "视频里说 Anthropic 其实是被一个什么样的「联合体」一起托举起来的公司？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "被整个算力云芯片联合体",
+            "一起托举起来的公司"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1020000,
+              "endMs": 1026000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-F-anthropic-history-chain-02",
+      "mediaRef": "sha256:e7b40d239ff8a035a434a220525aaccf",
+      "sourceVideoTag": "video-F-anthropic-history",
+      "sourceDistributionNote": "CC 字幕，AI 行业史类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "达里奥·阿莫代和丹妮拉·阿莫代兄妹是哪一年几月正式递交辞呈、离开 OpenAI 的？",
+          "standaloneQuestion": "达里奥·阿莫代和丹妮拉·阿莫代兄妹是哪一年几月正式递交辞呈、离开 OpenAI 的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "2020年12月",
+            "达里奥和丹尼拉正式递交辞呈"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 300000,
+              "endMs": 360000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "走的时候还带走了多少人？",
+          "standaloneQuestion": "达里奥和丹妮拉离开 OpenAI 的时候，还带走了多少位核心科学家？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "还带走了将近十位核心科学家"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 300000,
+              "endMs": 360000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "多跳合并追问",
+          "question": "那达里奥认为一家健康的 AI 公司，应该各拿多少比例给公共福祉、多少给市场？",
+          "standaloneQuestion": "达里奥在内部备忘录里认为，一家健康的 AI 公司应该分别拿出多少比例用于公共福祉和市场？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "75%",
+            "为了公共福祉",
+            "25%",
+            "为了市场"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 300000,
+              "endMs": 360000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "前面提到 2019 年微软入局向 OpenAI 注资，那这笔注资的具体金额是多少？",
+          "standaloneQuestion": "2019 年微软向 OpenAI 注资的具体金额是多少？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-F-anthropic-history-chain-03",
+      "mediaRef": "sha256:e7b40d239ff8a035a434a220525aaccf",
+      "sourceVideoTag": "video-F-anthropic-history",
+      "sourceDistributionNote": "CC 字幕，AI 行业史类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "Anthropic 的模型 Claude 第一次亮相是在哪一年几月？",
+          "standaloneQuestion": "Anthropic 的模型 Claude 第一次对外亮相是在哪一年几月？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "2023年3月",
+            "他的模型Claude第一次亮相"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 540000,
+              "endMs": 574000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "同年 7 月推出的第二代，是上线了什么才真正进入大众视野的？",
+          "standaloneQuestion": "Claude 第二代在 2023 年 7 月是上线了什么，才真正进入大众视野的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "Claude 2上线网页版公测"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 540000,
+              "endMs": 574000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "否定纠错追问",
+          "question": "顺着产品这条线，2024 年 3 月的 Claude 3 家族是一口气推出了四个版本，对吧？",
+          "standaloneQuestion": "2024 年 3 月推出的 Claude 3 家族，是一口气推出了四个版本吗？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "Claude 3家族一口气推出三个版本",
+            "轻量快速的Haiku",
+            "均衡好用的sonnet和能力最强的opus"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 600000,
+              "endMs": 660000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "话题漂移追问",
+          "question": "除了模型本身，这家公司里还集体迷上了一只和它同名的什么动物？",
+          "standaloneQuestion": "Anthropic 内部还集体迷上了一只和 Claude 同名的什么动物？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "加州科学院里一只通体雪白的短吻鳄",
+            "那只鳄鱼也叫CLAUDE"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 574000,
+              "endMs": 600000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-F-anthropic-history-chain-04",
+      "mediaRef": "sha256:e7b40d239ff8a035a434a220525aaccf",
+      "sourceVideoTag": "video-F-anthropic-history",
+      "sourceDistributionNote": "CC 字幕，AI 行业史类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "Anthropic 到 2026 年 5 月，年收入达到了多少？",
+          "standaloneQuestion": "Anthropic 到 2026 年 5 月，年收入达到了多少美元？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "而到了2026年5月",
+            "这个数字直接干到了470亿"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 900000,
+              "endMs": 960000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "最强劲的那个引擎，具体是哪个命令行工具？",
+          "standaloneQuestion": "Anthropic 这条收入曲线背后最强劲的引擎，具体是哪一个命令行工具？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "就是2025年2月推出的那个命令行工具",
+            "Claude Code"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 900000,
+              "endMs": 960000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "对比或约束追问",
+          "question": "它和出现之前的那些 AI 编程助手相比，最大的不同在哪里？",
+          "standaloneQuestion": "Cloud code 和它出现之前的 AI 编程助手相比，最大的不同在哪里？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "市面上的AI编程助手大多还停留在副驾驶阶段",
+            "它被设计成一个有高度自主权",
+            "能多步连续作业的虚拟软件工程师"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 900000,
+              "endMs": 960000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "视频里说财富杂志排名前十的企业里已经有八家是它的客户，那剩下没成为客户的那两家，具体是哪两家？",
+          "standaloneQuestion": "视频提到财富杂志排名前十的企业里已经有八家是 Anthropic 的客户，剩下没成为客户的那两家具体是哪两家公司？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-G-differential-equations-chain-01",
+      "mediaRef": "sha256:8b3a72b4b3b203c3ccb50d424567b926",
+      "sourceVideoTag": "video-G-differential-equations",
+      "sourceDistributionNote": "CC 字幕，高等数学教学类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "在猪猪头像这个例子中，曲线上每一个点的切线斜率等于多少？",
+          "standaloneQuestion": "视频引例1中，设计猪猪头像时，希望这条曲线上每一个点的切线斜率等于什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "希望这条曲线上每一个点的切线斜率都等于横坐标X的二倍"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 0,
+              "endMs": 60000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "那这个关系翻译成方程，具体是什么？",
+          "standaloneQuestion": "视频引例1中，曲线上每一点的切线斜率等于横坐标X的二倍这句话，翻译成用导数表示的方程是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "这个切线斜率也就是XY这一点处的一阶导数Y'等于2X"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 60000,
+              "endMs": 120000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "为什么满足这个方程的解有无穷多个？",
+          "standaloneQuestion": "对于方程Y一撇等于2X，为什么满足它的解有无穷多个？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "这个Y求导是2X，Y是2X的原函数啊",
+            "也就是通过不定积分去积一下2X得到X平方加任意常数C",
+            "Y有无穷多个解"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 120000,
+              "endMs": 180000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "对比或约束追问",
+          "question": "那如果规定曲线必须通过点(1,2)，解会变成什么？",
+          "standaloneQuestion": "对于方程Y一撇等于2X，如果规定曲线必须通过点(1,2)，求出的唯一解是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "将X等于一Y等于二代入上式",
+            "此时解二等于一加C得到C等于一",
+            "那么Y等于X方加一"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 120000,
+              "endMs": 180000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-G-differential-equations-chain-02",
+      "mediaRef": "sha256:8b3a72b4b3b203c3ccb50d424567b926",
+      "sourceVideoTag": "video-G-differential-equations",
+      "sourceDistributionNote": "CC 字幕，高等数学教学类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "引例2中，列车制动后获得的加速度是多少？",
+          "standaloneQuestion": "视频引例2中，这辆行驶的列车制动后获得的加速度是多少？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "列车获得了加速度-0.4米每秒方"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 240000,
+              "endMs": 300000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "多跳合并追问",
+          "question": "根据这个加速度，列车的路程S关于时间T的表达式最终确定成了什么？",
+          "standaloneQuestion": "引例2中，已知列车初速度为20米每秒、加速度为负的0.4米每秒方，最终确定的路程S关于时间T的表达式是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "S'呢你对-0.4积个分就是-0.4T加任意常数",
+            "所以第一项是-0.2T的平方",
+            "所以C1是20",
+            "C2就是零了",
+            "所以ST的表达式彻底确定"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 360000,
+              "endMs": 420000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "否定纠错追问",
+          "question": "照这么说，列车停住的那一刻，它行驶的路程是不是也等于零了？",
+          "standaloneQuestion": "引例2中，列车停住的意思是速度等于零，那么这是否意味着列车行驶的路程也等于零？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "那停住的意思呢就是V取零了",
+            "也就是S对T求导等于零"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 420000,
+              "endMs": 469000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "那这辆列车本身的载重有多少吨？",
+          "standaloneQuestion": "引例2中描述的这辆列车，其质量或载重是多少吨？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-G-differential-equations-chain-03",
+      "mediaRef": "sha256:8b3a72b4b3b203c3ccb50d424567b926",
+      "sourceVideoTag": "video-G-differential-equations",
+      "sourceDistributionNote": "CC 字幕，高等数学教学类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "什么样的方程叫做微分方程？",
+          "standaloneQuestion": "根据视频讲解，什么样的方程叫做微分方程？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "含有自变量那就X未知函数Y未知函数的导数包括Y'呀Y''啊等等各阶导数啊",
+            "如果一个方程含有这类要素就称为微分方程"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 480000,
+              "endMs": 540000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "话题漂移追问",
+          "question": "那微分方程的阶又是怎么定义的？",
+          "standaloneQuestion": "视频中，微分方程的阶是如何定义的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "一个微分方程中未知函数导数的最高阶数就称为微分方程的阶"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 540000,
+              "endMs": 600000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "那为什么它们的个数会跟阶数相同呢？",
+          "standaloneQuestion": "为什么通解中独立常数的个数会跟微分方程的阶数相同？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "我们要通过一阶导求出Y你高低得积一次分吧那你积一次分不就出一个任意常数吗",
+            "那如果这个微分方程是二阶呢那你要求回到Y你高低得积两次分吧那不就出两个任意常数吗"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 900000,
+              "endMs": 927000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "那例3验证题里 X = C1cos kt + C2sin kt 这个解中，系数 k 的具体数值是多少？",
+          "standaloneQuestion": "视频例3验证题中，X等于C1cos kt加C2sin kt这个解里的系数k具体等于多少？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-H-moyan-yuhua-chain-01",
+      "mediaRef": "sha256:27967ca53c125e90baa8c88d906ccd57",
+      "sourceVideoTag": "video-H-moyan-yuhua",
+      "sourceDistributionNote": "CC 字幕，作家访谈类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "莫言在访谈里提到自己“为什么要写作”时，给出了哪两个版本的理由？",
+          "standaloneQuestion": "莫言在访谈里提到自己“为什么要写作”时，给出了哪两个版本的理由？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "一个就是为了买一双闪闪发亮的皮鞋 买一块手表",
+            "再一个就是为了过上一天三顿吃饺子的生活"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 600000,
+              "endMs": 660000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "省略追问",
+          "question": "那除了这些功利性的原因，他说真正让他决定写作的更深层原因是什么？",
+          "standaloneQuestion": "莫言认为，除了买皮鞋、手表、吃饺子这些功利动机之外，真正让他产生写作欲望的更深层原因是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "在阅读的过程当中产生了写作的这种欲望",
+            "读得越多，这种欲望越强烈",
+            "对文学的热爱越加深一点"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 660000,
+              "endMs": 720000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "指代追问",
+          "question": "那余华流传比较广的那个版本又是什么？",
+          "standaloneQuestion": "余华流传比较广的关于“为什么写作”的版本是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "我的那个版本呢流传比较广的版本呢就是不愿意做牙医",
+            "想去文化馆上班",
+            "因为文化馆自由散漫"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 720000,
+              "endMs": 780000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "他们当年在都灵那场活动演讲的具体日期是几月几号？",
+          "standaloneQuestion": "莫言和余华当年在意大利都灵参加“我为什么写作”演讲活动的具体日期是几月几号？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-H-moyan-yuhua-chain-02",
+      "mediaRef": "sha256:27967ca53c125e90baa8c88d906ccd57",
+      "sourceVideoTag": "video-H-moyan-yuhua",
+      "sourceDistributionNote": "CC 字幕，作家访谈类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "访谈里提到的“奥德赛时期”指的是哪个年龄段？",
+          "standaloneQuestion": "访谈里提到的“奥德赛时期”指的是哪个年龄段？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "大概一般在20~35岁之间",
+            "这一段人生你可能面对很多变动",
+            "然后你产生一种迷茫",
+            "让你产生一种漂泊感"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 960000,
+              "endMs": 1020000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "对比或约束追问",
+          "question": "相比之下，余华说自己的这个时期有多少年、对应他人生哪个阶段？",
+          "standaloneQuestion": "余华说自己经历的“奥德赛时期”有多少年、对应他人生哪个阶段？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "我的奥德赛时期也就是牙医那5年的嘛",
+            "这5年里面我已经开始后面的一两年，我已经开始写小说了"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1140000,
+              "endMs": 1200000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "省略追问",
+          "question": "那莫言的呢，他的这个时期是从什么时候开始的？",
+          "standaloneQuestion": "莫言说自己的“奥德赛时期”（迷茫期）是从什么时候、什么阶段开始的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "从这个十六七岁，十五六岁，十三四岁的放牛的时候",
+            "可能就想到了，难道天天放牛吗"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1020000,
+              "endMs": 1080000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "话题漂移追问",
+          "question": "他说这种迷茫，是不是到他们现在这个年纪也还存在？",
+          "standaloneQuestion": "莫言和余华现在这个年纪是否还会感到迷茫和困惑？他们是怎么说的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "即便到了我们这个年龄",
+            "那依然还是感觉到有很多的困惑",
+            "尤其在写作过程当中，还是想千方百计地写出一点跟自己过去的作品不一样的东西来"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1080000,
+              "endMs": 1140000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-H-moyan-yuhua-chain-03",
+      "mediaRef": "sha256:27967ca53c125e90baa8c88d906ccd57",
+      "sourceVideoTag": "video-H-moyan-yuhua",
+      "sourceDistributionNote": "CC 字幕，作家访谈类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "对于网友热议的“带史铁生去偷瓜”这件事，莫言是怎么回应的？",
+          "standaloneQuestion": "对于网友热议的“带史铁生去偷瓜”这件事，莫言是怎么回应的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "第一没有这件事",
+            "第二我们我说那么傻，我们两个抬着史铁生去偷瓜",
+            "瓜没偷着把史铁生给弄到瓜地里了"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 3000000,
+              "endMs": 3060000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "否定纠错追问",
+          "question": "那他们当时实际上做的事又是什么？",
+          "standaloneQuestion": "既然莫言否认了“带史铁生偷瓜”这件事，那他们当时在辽宁文学院实际上做了什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "摘过摘黄瓜",
+            "因为那是辽宁文学院的",
+            "我说那是我们的讲课费",
+            "黄瓜就是我们的讲课费"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 3060000,
+              "endMs": 3120000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "指代追问",
+          "question": "那个“乌龙球”又是怎么回事？",
+          "standaloneQuestion": "在辽宁文学院踢球时，那个“乌龙球”的事情是怎么回事？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "他们不敢踢那个史铁生守门的那个球门",
+            "所以他拼命的往另一个球门里踢",
+            "最后我们客场打平",
+            "所以最后还是零比零"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 3060000,
+              "endMs": 3120000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 3120000,
+              "endMs": 3180000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "那场在辽宁文学院的球赛，具体是在哪一年踢的？",
+          "standaloneQuestion": "莫言和余华在辽宁文学院与史铁生等人踢的那场球赛，具体发生在哪一年？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-H-moyan-yuhua-chain-04",
+      "mediaRef": "sha256:27967ca53c125e90baa8c88d906ccd57",
+      "sourceVideoTag": "video-H-moyan-yuhua",
+      "sourceDistributionNote": "CC 字幕，作家访谈类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "莫言读的第一部长篇小说是什么？是谁写的？",
+          "standaloneQuestion": "莫言读的第一部长篇小说是什么？是谁写的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "我读的第一部长篇是吕梁英雄传",
+            "就是马烽和西戎写的"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1860000,
+              "endMs": 1920000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "多跳合并追问",
+          "question": "除了从老师那里借书，他还提到另一个重要的“读物来源”是什么？这个来源对他影响如何？",
+          "standaloneQuestion": "除了从小学老师那里借书，莫言小时候还有一个重要的读物来源是什么？这些读物对他的帮助是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "我大哥当时是1962年考上了这个华东师范大学",
+            "他留下了初中高中的全部的语文教材",
+            "所以这个初高中里面这个课本里面的内容对我帮助很大"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1920000,
+              "endMs": 1980000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 1980000,
+              "endMs": 2040000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "对比或约束追问",
+          "question": "相比之下，余华说他自己少年时期书没那么多，那他印象里“最好看的书之一”是什么？",
+          "standaloneQuestion": "余华少年时期读过的书里，他认为是“最好看的书之一”的是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "还有一个叫成语词典",
+            "因为每一个成语都是一个故事",
+            "那个是我是给他全部看完的",
+            "这个是我觉得是我在我那个时候看过的最好看的一本书之一"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2100000,
+              "endMs": 2160000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "话题漂移追问",
+          "question": "余华还讲过一个为了读一本书通宵熬夜的故事，是关于哪本书的？",
+          "standaloneQuestion": "余华在进修牙医期间，为了读哪本书通宵熬夜？这本书是谁借给他的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "他借了我一本那个陀思妥耶夫斯基的罪与罚",
+            "要我一个晚上读完",
+            "我一个晚上读到天亮"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 2280000,
+              "endMs": 2340000,
+              "sourceType": "CC"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "conversationCaseId": "video-H-moyan-yuhua-chain-05",
+      "mediaRef": "sha256:27967ca53c125e90baa8c88d906ccd57",
+      "sourceVideoTag": "video-H-moyan-yuhua",
+      "sourceDistributionNote": "CC 字幕，作家访谈类",
+      "turns": [
+        {
+          "turnNo": 1,
+          "category": "首轮直接问题",
+          "question": "关于AI会不会取代写作，莫言的观点是什么？",
+          "standaloneQuestion": "关于AI会不会取代写作，莫言的观点是什么？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "我认为我们写作这个行业还是起码短时间内是不可代替的",
+            "尤其是具有个性的原创性的文学作品",
+            "因为AI它现在再牛，它也是建立在这个前人写作的成果的基础上"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1440000,
+              "endMs": 1500000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 2,
+          "category": "指代追问",
+          "question": "那他用来佐证这个观点的“灵隐寺”那件事，具体是怎么回事？",
+          "standaloneQuestion": "莫言提到灵隐寺那件事来讨论AI写作，具体是怎么回事？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "灵隐寺建庙是1300周年",
+            "希望我能写一个赋",
+            "我说豆包豆包有这么一件事哈，你给我写一篇赋，1000字左右",
+            "大概也就这几分钟的时间出来了",
+            "对仗工整",
+            "但是没有思想"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1500000,
+              "endMs": 1560000,
+              "sourceType": "CC"
+            },
+            {
+              "startMs": 1560000,
+              "endMs": 1620000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 3,
+          "category": "多跳合并追问",
+          "question": "后来他是怎么让那篇赋“有了思想”的？",
+          "standaloneQuestion": "莫言后来是怎么让AI写的那篇赋“有了思想”的？",
+          "answerable": true,
+          "answerKeyPoints": [
+            "你给他一个思想，他就会给你演绎的很好",
+            "庙宇不是市场，我们进庙不是去赶集",
+            "事实不是交易",
+            "我到了庙里去捐了1000块钱，你不能跟佛祖去讨价还价",
+            "确实是很好了，一下有了思想了"
+          ],
+          "goldEvidence": [
+            {
+              "startMs": 1560000,
+              "endMs": 1620000,
+              "sourceType": "CC"
+            }
+          ]
+        },
+        {
+          "turnNo": 4,
+          "category": "无答案或越界问题",
+          "question": "他提到的那份“50个行业被AI取代”的报道，具体是哪家国外报纸？",
+          "standaloneQuestion": "莫言提到的“50个行业被AI取代”的报道，具体出自哪家国外报纸？",
+          "answerable": false,
+          "answerKeyPoints": [],
+          "goldEvidence": []
+        }
+      ]
+    }
+  ],
+  "verificationStatus": {
+    "structural": "pass_34_cases_136_turns_4_turns_each",
+    "evidenceGrounding": "pass_all_gold_evidence_exactly_match_cc_segment_boundaries",
+    "retrieval": "answerable_top5_pass_98_of_114; 16_retrieval_hard_cases_gold_correct; 22_unanswerable_retrieval_nonempty_pending_manual_absence_confirm",
+    "judge": "pass_116_of_136_qwen-plus; 17_unanswerable_leak_judge_false_positive; 2_entailment_failed_asr_typo_keypoints; 1_leak_unstable_rerun",
+    "deduplication": "pass_136_kept_0_dropped_threshold_0.92",
+    "humanReview": "pending_owner_review",
+    "freeze": "datasetSha256_pending_java_hasher",
+    "keypointCleanup": "24_turns_asr_typo_fixed"
+  }
+}

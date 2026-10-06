@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/** 用真实 V2 Chunk 与 {@link VideoEvidenceRetrievalService} 重放评测查询的 Top-5 排名。 */
+/** 用真实 V2 Chunk 与 {@link VideoEvidenceRetrievalService} 重放评测查询的排名。 */
 @Component
 public class ProductionRetrievalProbe implements RetrievalProbe {
 
@@ -23,12 +23,17 @@ public class ProductionRetrievalProbe implements RetrievalProbe {
 
     @Override
     public ProbeResult top5(ProbeRequest request) {
+        return topK(request, 5);
+    }
+
+    @Override
+    public ProbeResult topK(ProbeRequest request, int limit) {
         List<VideoChunk> chunks = checkpointService.loadChunks(request.mediaId());
         if (chunks == null || chunks.isEmpty()) {
             throw new IllegalStateException("V2 chunks unavailable for mediaId=" + request.mediaId());
         }
         List<VideoEvidenceHit> hits = retrievalService.search(
                 request.mediaId(), request.query(), chunks);
-        return new ProbeResult(hits);
+        return ProbeResult.topN(hits, limit);
     }
 }

@@ -1,11 +1,14 @@
 package com.example.server.service.knowledge;
 
 import com.example.server.dto.VideoChunk;
+import com.example.server.dto.VideoContext;
 import com.example.server.dto.VideoEvidenceHit;
 import com.example.server.dto.knowledge.KnowledgeScopeType;
 import com.example.server.dto.knowledge.QueryPlan;
 import com.example.server.exception.BusinessException;
+import com.example.server.config.MinuteRagProperties;
 import com.example.server.service.AgentCheckpointService;
+import com.example.server.service.MinuteRagRetrievalService;
 import com.example.server.service.VideoEvidenceRetrievalService;
 import org.junit.jupiter.api.Test;
 
@@ -38,6 +41,7 @@ class SingleVideoEvidenceRetrieverTest {
 
     private final AgentCheckpointService checkpointService = mock(AgentCheckpointService.class);
     private final VideoEvidenceRetrievalService retrievalService = mock(VideoEvidenceRetrievalService.class);
+    private final MinuteRagRetrievalService minuteRetrievalService = mock(MinuteRagRetrievalService.class);
     private final SingleVideoEvidenceRetriever retriever =
             new SingleVideoEvidenceRetriever(checkpointService, retrievalService);
 
@@ -46,6 +50,11 @@ class SingleVideoEvidenceRetrieverTest {
         when(retrievalService.planQuery("原问题", List.of())).thenReturn(PLAN);
 
         assertEquals(PLAN, retriever.plan("原问题", List.of()));
+    }
+
+    @Test
+    void minuteRagIsEnabledByDefault() {
+        assertTrue(new MinuteRagProperties().isEnabled());
     }
 
     @Test
@@ -91,5 +100,46 @@ class SingleVideoEvidenceRetrieverTest {
         assertEquals(1, result.retrievedCount());
         assertEquals(List.of(hit), result.hits());
         verify(retrievalService).search(eq(27L), eq(PLAN), eq(chunks));
+    }
+
+    @Test
+    void productionUsesMinuteRagAndDoesNotFallbackToChunkSearch() {
+        MinuteRagProperties properties = new MinuteRagProperties();
+        properties.setEnabled(true);
+        VideoContext context = new VideoContext("memory://media", "goal", List.of(
+                new VideoContext.VideoSegment(0, 60_000, "分钟字幕", List.of(), List.of())));
+        VideoEvidenceHit hit = new VideoEvidenceHit(0, 60_000, "CC", "分钟片段", "分钟字幕", List.of());
+        when(checkpointService.loadContext(27L)).thenReturn(context);
+        when(minuteRetrievalService.search(27L, PLAN)).thenReturn(List.of(hit));
+
+        SingleVideoEvidenceRetriever productionRetriever = new SingleVideoEvidenceRetriever(
+                checkpointService, retrievalService, minuteRetrievalService, properties);
+
+        RetrievalResult result = productionRetriever.retrieve(RetrievalScope.singleVideo(27L), PLAN);
+
+        assertEquals("MINUTE_RAG", result.retrievalMode());
+        assertEquals(List.of(hit), result.hits());
+        verify(minuteRetrievalService).search(27L, PLAN);
+        verify(retrievalService, never()).search(anyLong(), any(QueryPlan.class), anyList());
+        verify(checkpointService, never()).loadChunks(anyLong());
+    }
+
+    @Test
+    void minuteRagDoesNotFallbackWhenContextIsNotReady() {
+        MinuteRagProperties properties = new MinuteRagProperties();
+        properties.setEnabled(true);
+        when(checkpointService.loadContext(27L)).thenReturn(null);
+
+        SingleVideoEvidenceRetriever productionRetriever = new SingleVideoEvidenceRetriever(
+                checkpointService, retrievalService, minuteRetrievalService, properties);
+
+        assertThrows(KnowledgeRetrievalUnavailableException.class,
+                () -> productionRetriever.retrieve(RetrievalScope.singleVideo(27L), PLAN));
+        verifyNoChunkFallback();
+    }
+
+    private void verifyNoChunkFallback() {
+        verify(retrievalService, never()).search(anyLong(), any(QueryPlan.class), anyList());
+        verify(checkpointService, never()).loadChunks(anyLong());
     }
 }

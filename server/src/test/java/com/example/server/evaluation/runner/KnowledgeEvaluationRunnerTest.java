@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -110,6 +112,33 @@ class KnowledgeEvaluationRunnerTest {
         assertEquals("RetrievalProbe failed: IllegalStateException", hitAt5.unavailableReason());
         assertEquals("RetrievalProbe failed: IllegalStateException", report.variants().getFirst()
                 .summary().unavailableMetrics().get("hitAt5"));
+    }
+
+    @Test
+    void streamsEachTurnBeforeRunCompletes() throws Exception {
+        byte[] dataset = datasetJson().getBytes(StandardCharsets.UTF_8);
+        when(mediaResolver.resolve("sha256:abc", null))
+                .thenReturn(new MediaReferenceResolver.ResolvedMedia(7L, 62L, "abc"));
+        when(executor.answer(any())).thenAnswer(invocation -> {
+            AnswerRequest request = invocation.getArgument(0);
+            return new AnswerOutcome(request.question(), "HYBRID", 1, List.of(),
+                    AnswerMode.VIDEO_GROUNDED, true, "回答", 10, 0, 0);
+        });
+        when(retrievalProbe.top5(any())).thenReturn(new RetrievalProbe.ProbeResult(List.of()));
+
+        Path output = Files.createTempFile("evaluation-stream", ".jsonl");
+        try (EvaluationJsonlWriter writer = new EvaluationJsonlWriter(objectMapper, output)) {
+            runner.runStreaming(dataset, new EvaluationRunRequest(
+                    "stream-1", "commit-1", "p-v1", "model", Map.of(),
+                    List.of(EvaluationVariant.D), null), writer);
+        }
+
+        List<String> lines = Files.readAllLines(output);
+        assertEquals(1, lines.stream().filter(line -> line.contains("\"type\":\"run_started\"")).count());
+        assertEquals(2, lines.stream().filter(line -> line.contains("\"type\":\"turn_completed\"")).count());
+        assertEquals(1, lines.stream().filter(line -> line.contains("\"type\":\"case_completed\"")).count());
+        assertEquals(1, lines.stream().filter(line -> line.contains("\"type\":\"variant_completed\"")).count());
+        assertEquals(1, lines.stream().filter(line -> line.contains("\"type\":\"run_completed\"")).count());
     }
 
     private String datasetJson() {

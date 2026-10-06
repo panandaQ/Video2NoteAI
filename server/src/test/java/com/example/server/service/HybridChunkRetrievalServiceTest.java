@@ -47,6 +47,11 @@ class HybridChunkRetrievalServiceTest {
         assertEquals(1, hits.size());
         assertEquals("字幕原文", hits.get(0).transcript());
         assertEquals("CC", hits.get(0).transcriptSource());
+        assertEquals(0.9D, hits.get(0).scoreBreakdown().rerankerScore());
+        assertTrue(hits.get(0).scoreBreakdown().bm25Score() > 0D);
+        assertTrue(hits.get(0).scoreBreakdown().denseScore() > 0D);
+        assertTrue(hits.get(0).scoreBreakdown().rrfScore() > 0D);
+        assertTrue(hits.get(0).scoreBreakdown().rerankerApplied());
         @SuppressWarnings("unchecked")
         org.mockito.ArgumentCaptor<List<String>> documents = org.mockito.ArgumentCaptor.forClass(List.class);
         org.mockito.Mockito.verify(reranker).rerank(anyString(), documents.capture(), anyInt());

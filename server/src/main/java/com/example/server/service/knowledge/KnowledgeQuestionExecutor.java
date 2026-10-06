@@ -133,7 +133,8 @@ public class KnowledgeQuestionExecutor {
                     request.mediaId(), mediaTitle(request.mediaId()), result.citedEvidence());
             return new AnswerOutcome(answerQuestion, retrieved.retrievalMode(), retrieved.retrievedCount(),
                     evidence, result.answerMode(), result.videoEvidenceFound(), result.answer(),
-                    elapsedMillis(started), result.rawCitationCount(), result.fabricatedCitationCount());
+                    elapsedMillis(started), result.rawCitationCount(), result.fabricatedCitationCount(),
+                    plan, retrieved.hits());
         }
     }
 

@@ -29,16 +29,27 @@ public final class Bm25ChunkIndex {
     }
 
     public List<ChunkRetrievalDocument> search(String query, int limit) {
+        return searchWithScores(query, limit).stream()
+                .map(ScoredDocument::document)
+                .toList();
+    }
+
+    public List<ScoredDocument> searchWithScores(String query, int limit) {
         List<String> terms = tokenize(query);
         if (terms.isEmpty()) return List.of();
         int total = entries.size();
-        return entries.stream()
-                .map(entry -> new Scored(entry.document, score(entry.tokens, terms, total)))
-                .filter(scored -> scored.score > 0)
-                .sorted(Comparator.comparingDouble(Scored::score).reversed()
-                        .thenComparing(scored -> scored.document.chunkRef()))
+        List<ScoredDocument> scored = entries.stream()
+                .map(entry -> new ScoredDocument(entry.document, score(entry.tokens, terms, total), 0))
+                .filter(item -> item.score() > 0)
+                .sorted(Comparator.comparingDouble(ScoredDocument::score).reversed()
+                        .thenComparing(item -> item.document().chunkRef()))
                 .limit(Math.max(0, limit))
-                .map(Scored::document)
+                .toList();
+        return java.util.stream.IntStream.range(0, scored.size())
+                .mapToObj(index -> {
+                    ScoredDocument item = scored.get(index);
+                    return new ScoredDocument(item.document(), item.score(), index + 1);
+                })
                 .toList();
     }
 
@@ -79,5 +90,5 @@ public final class Bm25ChunkIndex {
     }
 
     private record Entry(ChunkRetrievalDocument document, List<String> tokens) { }
-    private record Scored(ChunkRetrievalDocument document, double score) { }
+    public record ScoredDocument(ChunkRetrievalDocument document, double score, int rank) { }
 }

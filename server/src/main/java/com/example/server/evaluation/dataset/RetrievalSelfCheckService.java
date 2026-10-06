@@ -1,6 +1,7 @@
 package com.example.server.evaluation.dataset;
 
 import com.example.server.dto.VideoEvidenceHit;
+import com.example.server.dto.RetrievalScoreBreakdown;
 import com.example.server.evaluation.runner.EvaluationDataset;
 import com.example.server.service.VideoEvidenceRetrievalService;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,8 @@ public class RetrievalSelfCheckService {
         }
         List<HitRange> ranges = java.util.stream.IntStream.range(0, hits.size())
                 .mapToObj(index -> new HitRange(index + 1, hits.get(index).startMs(),
-                        hits.get(index).endMs(), hits.get(index).source()))
+                        hits.get(index).endMs(), hits.get(index).source(), hits.get(index).score(),
+                        hits.get(index).chunkRef(), hits.get(index).scoreBreakdown()))
                 .toList();
         return new TurnResult(conversationCase.conversationCaseId(), turn.turnNo(),
                 conversationCase.mediaRef(), conversationCase.sourceVideoTag(), turn.answerable(), topK,
@@ -91,6 +93,8 @@ public class RetrievalSelfCheckService {
         }
     }
 
-    public record HitRange(int rank, long startMs, long endMs, String sourceType) {
+    public record HitRange(int rank, long startMs, long endMs, String sourceType,
+                           double score, String chunkRef,
+                           RetrievalScoreBreakdown scoreBreakdown) {
     }
 }

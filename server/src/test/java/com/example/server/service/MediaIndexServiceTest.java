@@ -5,6 +5,7 @@ import com.example.server.dto.VideoContext;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -130,6 +131,21 @@ class MediaIndexServiceTest {
                 .thenThrow(new IllegalStateException("embedding api down"));
 
         assertFalse(service.ensureIndexed(MEDIA_ID));
+    }
+
+    @Test
+    void asyncIndexIsStartedAndCompletionCanBeJoinedByReadinessCheck() {
+        List<VideoChunk> built = List.of(chunk(0, 300));
+        VideoContext context = new VideoContext("http://minio/source.mp4", "goal", List.of(segment(0)));
+        when(checkpointService.loadChunks(MEDIA_ID)).thenReturn(null, null, built);
+        when(chunkingService.build(any(), any(), any())).thenReturn(built);
+
+        CompletableFuture<Boolean> future = service.ensureIndexedAsync(MEDIA_ID, context);
+
+        assertTrue(future.join());
+        assertTrue(service.ensureIndexed(MEDIA_ID));
+        verify(chunkingService).build(any(), any(), any());
+        verify(retrievalService).index(MEDIA_ID, built);
     }
 
     private VideoChunk chunk(long startSeconds, long endSeconds) {

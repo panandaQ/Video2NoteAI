@@ -18,7 +18,8 @@ public record VideoEvidenceHit(
         double score,
         String chunkRef,
         List<String> evidenceFrames,
-        String transcriptSource
+        String transcriptSource,
+        RetrievalScoreBreakdown scoreBreakdown
 ) {
     public VideoEvidenceHit {
         source = source == null ? "" : source;
@@ -29,17 +30,21 @@ public record VideoEvidenceHit(
         evidenceFrames = evidenceFrames == null ? List.of() : List.copyOf(evidenceFrames);
         transcriptSource = transcriptSource == null || transcriptSource.isBlank()
                 ? "NONE" : transcriptSource;
+        scoreBreakdown = scoreBreakdown == null
+                ? RetrievalScoreBreakdown.unknown(score) : scoreBreakdown;
     }
 
     /** 兼容旧构造：无分数（0.0）。 */
     public VideoEvidenceHit(long startMs, long endMs, String source, String snippet,
                             String transcript, List<String> ocrTexts) {
-        this(startMs, endMs, source, snippet, transcript, ocrTexts, 0.0, "", List.of(), "UNKNOWN");
+        this(startMs, endMs, source, snippet, transcript, ocrTexts, 0.0, "", List.of(),
+                "UNKNOWN", RetrievalScoreBreakdown.unknown(0.0));
     }
 
     public VideoEvidenceHit(long startMs, long endMs, String source, String snippet,
                             String transcript, List<String> ocrTexts, double score) {
-        this(startMs, endMs, source, snippet, transcript, ocrTexts, score, "", List.of(), "UNKNOWN");
+        this(startMs, endMs, source, snippet, transcript, ocrTexts, score, "", List.of(),
+                "UNKNOWN", RetrievalScoreBreakdown.unknown(score));
 
     }
 
@@ -47,6 +52,7 @@ public record VideoEvidenceHit(
                             String transcript, List<String> ocrTexts, double score,
                             String chunkRef, List<String> evidenceFrames) {
         this(startMs, endMs, source, snippet, transcript, ocrTexts, score,
-                chunkRef, evidenceFrames, "UNKNOWN");
+                chunkRef, evidenceFrames, "UNKNOWN", RetrievalScoreBreakdown.unknown(score));
     }
+
 }

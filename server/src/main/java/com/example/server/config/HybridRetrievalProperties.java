@@ -15,9 +15,9 @@ public class HybridRetrievalProperties {
 
     private boolean enabled = true;
     private boolean rerankerEnabled = true;
-    private String indexVersion = "CHUNK_HYBRID_V1";
+    private String indexVersion = "CHUNK_HYBRID_V2";
     private String bm25Version = "BM25_CHUNK_V1";
-    private String denseCollection = "video_chunk_dense_bge_m3_v1";
+    private String denseCollection = "video_chunk_dense_bge_m3_v2";
     private String rerankerModel = "BAAI/bge-reranker-v2-m3";
 
     @Min(1)
